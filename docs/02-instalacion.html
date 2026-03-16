@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>02 - Instalación | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <span class="logo-icon">🐘</span>
+                    <span class="logo-text">PostgreSQL desde Cero</span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav">
+                    <ul>
+                        <li><a href="01-introduccion.html">01 - Introducción</a></li>
+                        <li><a href="02-instalacion.html" class="active">02 - Instalación</a></li>
+                        <li><a href="03-conceptos-basicos.html">03 - Conceptos Básicos</a></li>
+                        <li><a href="04-ejemplos-practicos.html">04 - Ejemplos Prácticos</a></li>
+                        <li><a href="05-buenas-practicas.html">05 - Buenas Prácticas</a></li>
+                        <li><a href="06-casos-reales.html">06 - Casos Reales</a></li>
+                        <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 02: Instalación de PostgreSQL</h1>
+                    <p class="docs-intro">Aprende a instalar PostgreSQL en Windows, Linux y macOS, además de configurar las herramientas de desarrollo.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>2.1 Instalación en Windows</h2>
+                    
+                    <h3>Paso 1: Descargar el Instalador</h3>
+                    <p>Visita el sitio oficial de PostgreSQL y descarga el instalador para Windows:</p>
+                    <ol>
+                        <li>Ve a <a href="https://www.postgresql.org/download/windows/" target="_blank">postgresql.org/download/windows</a></li>
+                        <li>Haz clic en "Download the installer"</li>
+                        <li>Selecciona la versión más reciente (actualmente PostgreSQL 16)</li>
+                        <li>Descarga el instalador de EnterpriseDB</li>
+                    </ol>
+
+                    <h3>Paso 2: Ejecutar el Instalador</h3>
+                    <p>Sigue estos pasos durante la instalación:</p>
+                    <ol>
+                        <li><strong>Directorio de instalación:</strong> Deja el predeterminado (C:\Program Files\PostgreSQL\16)</li>
+                        <li><strong>Componentes:</strong> Selecciona todos (PostgreSQL Server, pgAdmin 4, Command Line Tools)</li>
+                        <li><strong>Directorio de datos:</strong> Deja el predeterminado</li>
+                        <li><strong>Contraseña:</strong> Establece una contraseña segura para el usuario postgres (¡guárdala!)</li>
+                        <li><strong>Puerto:</strong> Deja 5432 (puerto por defecto)</li>
+                        <li><strong>Locale:</strong> Selecciona tu configuración regional</li>
+                    </ol>
+
+                    <h3>Paso 3: Verificar la Instalación</h3>
+                    <pre><code class="language-sql"># Abre PowerShell o CMD y ejecuta:
+psql --version
+
+# Deberías ver algo como:
+# psql (PostgreSQL) 16.0
+
+# Conéctate a PostgreSQL
+psql -U postgres
+
+# Ingresa la contraseña que estableciste</code></pre>
+
+                    <div class="info-box">
+                        <p><strong>⚠️ Importante:</strong> La contraseña del usuario postgres es crítica. Si la olvidas, tendrás que resetearla editando pg_hba.conf</p>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.2 Instalación en Linux (Ubuntu/Debian)</h2>
+                    
+                    <h3>Método 1: Usando el Repositorio Oficial</h3>
+                    <pre><code class="language-bash"># 1. Importar la clave del repositorio
+wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+
+# 2. Agregar el repositorio
+sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt/ $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+
+# 3. Actualizar paquetes
+sudo apt-get update
+
+# 4. Instalar PostgreSQL
+sudo apt-get install -y postgresql postgresql-contrib
+
+# 5. Verificar estado
+sudo systemctl status postgresql
+
+# 6. Habilitar inicio automático
+sudo systemctl enable postgresql</code></pre>
+
+                    <h3>Método 2: Usando Paquetes del Sistema</h3>
+                    <pre><code class="language-bash"># Instalación rápida (versión del repositorio de Ubuntu)
+sudo apt update
+sudo apt install -y postgresql postgresql-contrib</code></pre>
+
+                    <h3>Configuración Inicial en Linux</h3>
+                    <pre><code class="language-bash"># Cambiar contraseña del usuario postgres
+sudo -u postgres psql
+ALTER USER postgres PASSWORD 'tu_contraseña_segura';
+\q
+
+# Crear un usuario de base de datos
+sudo -u postgres createuser --interactive
+
+# Crear una base de datos
+sudo -u postgres createdb mi_base</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.3 Instalación en macOS</h2>
+                    
+                    <h3>Método 1: Usando Homebrew (Recomendado)</h3>
+                    <pre><code class="language-bash"># 1. Instalar Homebrew (si no lo tienes)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# 2. Instalar PostgreSQL
+brew install postgresql@16
+
+# 3. Iniciar el servicio
+brew services start postgresql@16
+
+# 4. Verificar estado
+brew services list
+
+# 5. Crear usuario
+createuser --superuser $USER</code></pre>
+
+                    <h3>Método 2: Usando Postgres.app</h3>
+                    <ol>
+                        <li>Descarga Postgres.app desde <a href="https://postgresapp.com/" target="_blank">postgresapp.com</a></li>
+                        <li>Arrastra la aplicación a la carpeta Aplicaciones</li>
+                        <li>Abre Postgres.app</li>
+                        <li>Haz clic en "Initialize" para crear un nuevo servidor</li>
+                    </ol>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.4 Instalación de pgAdmin 4</h2>
+                    
+                    <h3>En Windows</h3>
+                    <p>pgAdmin 4 se instala automáticamente con el instalador de PostgreSQL. Para acceder:</p>
+                    <ol>
+                        <li>Busca "pgAdmin 4" en el menú Inicio</li>
+                        <li>Se abrirá en tu navegador predeterminado</li>
+                        <li>Establece una contraseña maestra la primera vez</li>
+                    </ol>
+
+                    <h3>En Linux</h3>
+                    <pre><code class="language-bash"># Instalar pgAdmin 4
+sudo apt-get install pgadmin4
+
+# O usar la versión web
+sudo apt-get install pgadmin4-web</code></pre>
+
+                    <h3>Configurar Conexión en pgAdmin</h3>
+                    <ol>
+                        <li>Haz clic derecho en "Servers" → "Create" → "Server"</li>
+                        <li>En la pestaña "General", pon un nombre (ej: "PostgreSQL Local")</li>
+                        <li>En "Connection":
+                            <ul>
+                                <li>Host: localhost</li>
+                                <li>Port: 5432</li>
+                                <li>Maintenance database: postgres</li>
+                                <li>Username: postgres</li>
+                                <li>Password: tu contraseña</li>
+                            </ul>
+                        </li>
+                        <li>Haz clic en "Save"</li>
+                    </ol>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.5 Configuración Post-Instalación</h2>
+                    
+                    <h3>Archivos de Configuración Importantes</h3>
+                    
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Archivo</th>
+                                <th>Ubicación Típica</th>
+                                <th>Propósito</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>postgresql.conf</strong></td>
+                                <td>/etc/postgresql/16/main/ (Linux)<br>C:\Program Files\PostgreSQL\16\data\ (Windows)</td>
+                                <td>Configuración principal del servidor</td>
+                            </tr>
+                            <tr>
+                                <td><strong>pg_hba.conf</strong></td>
+                                <td>Misma ubicación</td>
+                                <td>Control de acceso de clientes</td>
+                            </tr>
+                            <tr>
+                                <td><strong>pg_ident.conf</strong></td>
+                                <td>Misma ubicación</td>
+                                <td>Mapeo de usuarios</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Configuraciones Recomendadas</h3>
+                    <pre><code class="language-bash"># En postgresql.conf:
+
+# Memoria compartida (25% de RAM para servidores dedicados)
+shared_buffers = 2GB
+
+# Memoria para work mem (para operaciones de ordenamiento)
+work_mem = 64MB
+
+# Cache para consultas
+effective_cache_size = 6GB
+
+# Log de consultas lentas (más de 1 segundo)
+log_min_duration_statement = 1000
+
+# Habilitar logging
+logging_collector = on
+log_directory = 'log'
+log_filename = 'postgresql-%Y-%m-%d_%H%M%S.log'</code></pre>
+
+                    <h3>Reiniciar PostgreSQL después de cambios</h3>
+                    <pre><code class="language-bash"># Windows (PowerShell como Administrador)
+Restart-Service postgresql-x64-16
+
+# Linux
+sudo systemctl restart postgresql
+
+# macOS (Homebrew)
+brew services restart postgresql@16</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.6 Solución de Problemas Comunes</h2>
+                    
+                    <h3>Problema: "Password authentication failed"</h3>
+                    <pre><code class="language-bash"># Solución: Editar pg_hba.conf
+# Cambiar de "scram-sha-256" a "md5" o "trust" (solo desarrollo)
+
+# En Windows: C:\Program Files\PostgreSQL\16\data\pg_hba.conf
+# En Linux: /etc/postgresql/16/main/pg_hba.conf
+
+# Cambiar esta línea:
+host    all             all             127.0.0.1/32            scram-sha-256
+# Por esta:
+host    all             all             127.0.0.1/32            md5
+
+# Reiniciar PostgreSQL</code></pre>
+
+                    <h3>Problema: "Could not connect to server"</h3>
+                    <pre><code class="language-bash"># Verificar si PostgreSQL está corriendo
+# Windows
+Get-Service postgresql*
+
+# Linux
+sudo systemctl status postgresql
+
+# Verificar puerto
+netstat -an | grep 5432</code></pre>
+
+                    <h3>Problema: "Role does not exist"</h3>
+                    <pre><code class="language-sql"># Crear el rol/usuario
+CREATE ROLE nombre_usuario WITH LOGIN PASSWORD 'contraseña';
+
+# Dar permisos
+GRANT ALL PRIVILEGES ON DATABASE nombre_db TO nombre_usuario;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.7 Ejercicios Prácticos</h2>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 1: Instalación Completa</h4>
+                        <p><strong>Objetivo:</strong> Instalar PostgreSQL y pgAdmin en tu sistema.</p>
+                        <ol>
+                            <li>Descarga e instala PostgreSQL según tu sistema operativo</li>
+                            <li>Establece una contraseña segura para postgres</li>
+                            <li>Instala pgAdmin 4</li>
+                            <li>Configura una conexión en pgAdmin</li>
+                            <li>Conéctate exitosamente al servidor</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 2: Verificación desde Terminal</h4>
+                        <p><strong>Objetivo:</strong> Familiarizarse con psql desde línea de comandos.</p>
+                        <ol>
+                            <li>Abre terminal/PowerShell/CMD</li>
+                            <li>Ejecuta <code>psql --version</code></li>
+                            <li>Conéctate: <code>psql -U postgres</code></li>
+                            <li>Ejecuta <code>SELECT version();</code></li>
+                            <li>Ejecuta <code>\l</code> para listar bases de datos</li>
+                            <li>Sal con <code>\q</code></li>
+                        </ol>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 3: Crear Usuario y Base de Datos</h4>
+                        <p><strong>Objetivo:</strong> Gestionar usuarios y bases de datos.</p>
+                        <ol>
+                            <li>Conéctate como postgres</li>
+                            <li>Crea un usuario: <code>CREATE USER dev_user WITH PASSWORD 'dev123';</code></li>
+                            <li>Crea una base de datos: <code>CREATE DATABASE mi_proyecto OWNER dev_user;</code></li>
+                            <li>Conéctate a la nueva base: <code>\c mi_proyecto</code></li>
+                            <li>Verifica los privilegios</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>2.8 Resumen del Tema</h2>
+                    
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>PostgreSQL está disponible para Windows, Linux y macOS</li>
+                            <li>El instalador oficial incluye pgAdmin 4 para administración gráfica</li>
+                            <li>La contraseña del usuario postgres debe guardarse de forma segura</li>
+                            <li>Los archivos de configuración principales son postgresql.conf y pg_hba.conf</li>
+                            <li>psql es la herramienta de línea de comandos oficial</li>
+                        </ul>
+                    </div>
+
+                    <div class="next-topic">
+                        <a href="03-conceptos-basicos.html" class="btn btn-primary">Siguiente Tema: 03 - Conceptos Básicos →</a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="developer-info">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
+                <div class="developer-contact">
+                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
+                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
+                </div>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

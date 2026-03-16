@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>04 - Ejemplos Prácticos | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo"><span class="logo-icon">🐘</span><span class="logo-text">PostgreSQL desde Cero</span></div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav"><ul>
+                    <li><a href="01-introduccion.html">01 - Introducción</a></li>
+                    <li><a href="02-instalacion.html">02 - Instalación</a></li>
+                    <li><a href="03-conceptos-basicos.html">03 - Conceptos Básicos</a></li>
+                    <li><a href="04-ejemplos-practicos.html" class="active">04 - Ejemplos Prácticos</a></li>
+                    <li><a href="05-buenas-practicas.html">05 - Buenas Prácticas</a></li>
+                    <li><a href="06-casos-reales.html">06 - Casos Reales</a></li>
+                    <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                </ul></nav>
+            </aside>
+
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 04: Ejemplos Prácticos</h1>
+                    <p class="docs-intro">Aprende con ejemplos reales: JOINs, subconsultas, vistas, funciones almacenadas y triggers.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>4.1 JOINs - Unir Tablas</h2>
+                    
+                    <h3>Setup - Tablas de Ejemplo</h3>
+                    <pre><code class="language-sql">-- Tabla clientes
+CREATE TABLE clientes (
+    cliente_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    email VARCHAR(255),
+    ciudad VARCHAR(50)
+);
+
+-- Tabla pedidos
+CREATE TABLE pedidos (
+    pedido_id SERIAL PRIMARY KEY,
+    cliente_id INTEGER REFERENCES clientes(cliente_id),
+    producto VARCHAR(100),
+    monto DECIMAL(10,2),
+    fecha DATE
+);
+
+-- Datos de prueba
+INSERT INTO clientes VALUES
+(1, 'Juan Pérez', 'juan@email.com', 'Madrid'),
+(2, 'María García', 'maria@email.com', 'Barcelona'),
+(3, 'Carlos López', 'carlos@email.com', 'Madrid'),
+(4, 'Ana Martínez', 'ana@email.com', 'Valencia');
+
+INSERT INTO pedidos VALUES
+(1, 1, 'Laptop', 1200, '2024-01-15'),
+(2, 1, 'Mouse', 25, '2024-01-16'),
+(3, 2, 'Teclado', 75, '2024-01-17'),
+(4, 3, 'Monitor', 300, '2024-01-18');</code></pre>
+
+                    <h3>INNER JOIN</h3>
+                    <pre><code class="language-sql">-- Devuelve solo filas que tienen coincidencia en ambas tablas
+SELECT 
+    c.nombre AS cliente,
+    c.email,
+    p.producto,
+    p.monto,
+    p.fecha
+FROM clientes c
+INNER JOIN pedidos p ON c.cliente_id = p.cliente_id
+ORDER BY p.fecha;
+
+-- Resultado: Solo clientes con pedidos (Ana no aparece)</code></pre>
+
+                    <h3>LEFT JOIN (LEFT OUTER JOIN)</h3>
+                    <pre><code class="language-sql">-- Devuelve TODOS los clientes, incluso sin pedidos
+SELECT 
+    c.nombre AS cliente,
+    c.email,
+    p.producto,
+    p.monto
+FROM clientes c
+LEFT JOIN pedidos p ON c.cliente_id = p.cliente_id
+ORDER BY c.nombre;
+
+-- Resultado: Todos los clientes (Ana aparece con NULL en pedidos)</code></pre>
+
+                    <h3>RIGHT JOIN</h3>
+                    <pre><code class="language-sql">-- Devuelve TODOS los pedidos, incluso sin cliente
+SELECT 
+    c.nombre AS cliente,
+    p.producto,
+    p.monto
+FROM clientes c
+RIGHT JOIN pedidos p ON c.cliente_id = p.cliente_id;</code></pre>
+
+                    <h3>FULL OUTER JOIN</h3>
+                    <pre><code class="language-sql">-- Devuelve TODAS las filas de ambas tablas
+SELECT 
+    c.nombre AS cliente,
+    p.producto,
+    p.monto
+FROM clientes c
+FULL OUTER JOIN pedidos p ON c.cliente_id = p.cliente_id;</code></pre>
+
+                    <h3>CROSS JOIN</h3>
+                    <pre><code class="language-sql">-- Producto cartesiano: todas las combinaciones posibles
+SELECT c.nombre, p.producto
+FROM clientes c
+CROSS JOIN pedidos p;
+-- Resultado: 4 clientes × 4 pedidos = 16 filas</code></pre>
+
+                    <h3>SELF JOIN</h3>
+                    <pre><code class="language-sql">-- Unir una tabla consigo misma
+-- Ejemplo: Encontrar clientes de la misma ciudad
+SELECT 
+    c1.nombre AS cliente1,
+    c2.nombre AS cliente2,
+    c1.ciudad
+FROM clientes c1
+INNER JOIN clientes c2 ON c1.ciudad = c2.ciudad 
+    AND c1.cliente_id < c2.cliente_id
+ORDER BY c1.ciudad;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.2 Subconsultas (Subqueries)</h2>
+                    
+                    <h3>Subconsulta en WHERE</h3>
+                    <pre><code class="language-sql">-- Clientes que han hecho pedidos mayores al promedio
+SELECT nombre, email
+FROM clientes
+WHERE cliente_id IN (
+    SELECT cliente_id 
+    FROM pedidos 
+    WHERE monto > (SELECT AVG(monto) FROM pedidos)
+);
+
+-- Clientes SIN pedidos
+SELECT nombre, email
+FROM clientes
+WHERE cliente_id NOT IN (
+    SELECT DISTINCT cliente_id FROM pedidos
+);</code></pre>
+
+                    <h3>Subconsulta en SELECT</h3>
+                    <pre><code class="language-sql">-- Cada cliente con su total gastado
+SELECT 
+    c.nombre,
+    c.email,
+    (SELECT COALESCE(SUM(p.monto), 0) 
+     FROM pedidos p 
+     WHERE p.cliente_id = c.cliente_id) AS total_gastado
+FROM clientes c;</code></pre>
+
+                    <h3>Subconsulta en FROM</h3>
+                    <pre><code class="language-sql">-- Usar resultado de consulta como tabla temporal
+SELECT 
+    ciudad,
+    COUNT(*) AS num_clientes,
+    AVG(total_gastado) AS promedio_gasto
+FROM (
+    SELECT 
+        c.ciudad,
+        c.cliente_id,
+        COALESCE(SUM(p.monto), 0) AS total_gastado
+    FROM clientes c
+    LEFT JOIN pedidos p ON c.cliente_id = p.cliente_id
+    GROUP BY c.ciudad, c.cliente_id
+) AS subconsulta
+GROUP BY ciudad;</code></pre>
+
+                    <h3>Subconsulta Correlacionada</h3>
+                    <pre><code class="language-sql">-- La subconsulta usa valores de la consulta externa
+SELECT 
+    c.nombre,
+    c.email
+FROM clientes c
+WHERE EXISTS (
+    SELECT 1 FROM pedidos p 
+    WHERE p.cliente_id = c.cliente_id 
+    AND p.monto > 500
+);</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.3 Vistas (Views)</h2>
+                    
+                    <h3>Crear Vista Simple</h3>
+                    <pre><code class="language-sql">-- Vista que muestra pedidos con información del cliente
+CREATE VIEW vista_pedidos_completos AS
+SELECT 
+    p.pedido_id,
+    c.nombre AS cliente,
+    c.email,
+    c.ciudad,
+    p.producto,
+    p.monto,
+    p.fecha
+FROM pedidos p
+INNER JOIN clientes c ON p.cliente_id = c.cliente_id;
+
+-- Usar la vista
+SELECT * FROM vista_pedidos_completos WHERE ciudad = 'Madrid';
+SELECT cliente, SUM(monto) as total FROM vista_pedidos_completos GROUP BY cliente;</code></pre>
+
+                    <h3>Vista con Agregaciones</h3>
+                    <pre><code class="language-sql">CREATE VIEW resumen_clientes AS
+SELECT 
+    c.cliente_id,
+    c.nombre,
+    c.email,
+    COUNT(p.pedido_id) AS num_pedidos,
+    COALESCE(SUM(p.monto), 0) AS total_gastado,
+    COALESCE(AVG(p.monto), 0) AS gasto_promedio,
+    MAX(p.fecha) AS ultimo_pedido
+FROM clientes c
+LEFT JOIN pedidos p ON c.cliente_id = p.cliente_id
+GROUP BY c.cliente_id, c.nombre, c.email;
+
+-- Consultar la vista
+SELECT * FROM resumen_clientes ORDER BY total_gastado DESC;</code></pre>
+
+                    <h3>Vista Materializada</h3>
+                    <pre><code class="language-sql">-- Se almacena físicamente y se actualiza manualmente
+CREATE MATERIALIZED VIEW mv_resumen_ventas AS
+SELECT 
+    DATE_TRUNC('month', fecha) AS mes,
+    COUNT(*) AS num_ventas,
+    SUM(monto) AS total_ventas,
+    AVG(monto) AS venta_promedio
+FROM pedidos
+GROUP BY DATE_TRUNC('month', fecha)
+ORDER BY mes;
+
+-- Consultar
+SELECT * FROM mv_resumen_ventas;
+
+-- Actualizar datos
+REFRESH MATERIALIZED VIEW mv_resumen_ventas;
+
+-- Actualizar concurrentemente (permite lecturas durante refresh)
+REFRESH MATERIALIZED VIEW CONCURRENTLY mv_resumen_ventas;</code></pre>
+
+                    <h3>Modificar y Eliminar Vistas</h3>
+                    <pre><code class="language-sql">-- Reemplazar vista existente
+CREATE OR REPLACE VIEW vista_pedidos_completos AS
+SELECT p.*, c.nombre, c.email, c.ciudad
+FROM pedidos p
+JOIN clientes c ON p.cliente_id = c.cliente_id
+WHERE p.monto > 10;
+
+-- Eliminar vista
+DROP VIEW IF EXISTS vista_pedidos_completos;
+DROP MATERIALIZED VIEW IF EXISTS mv_resumen_ventas;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.4 Funciones Almacenadas (Stored Procedures)</h2>
+                    
+                    <h3>Crear Función Simple</h3>
+                    <pre><code class="language-sql">-- Función que calcula el total de un cliente
+CREATE OR REPLACE FUNCTION obtener_total_cliente(p_cliente_id INTEGER)
+RETURNS DECIMAL AS $$
+DECLARE
+    total DECIMAL;
+BEGIN
+    SELECT COALESCE(SUM(monto), 0) INTO total
+    FROM pedidos
+    WHERE cliente_id = p_cliente_id;
+    
+    RETURN total;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Usar la función
+SELECT 
+    nombre, 
+    email,
+    obtener_total_cliente(cliente_id) AS total
+FROM clientes;</code></pre>
+
+                    <h3>Función con Múltiples Parámetros</h3>
+                    <pre><code class="language-sql">CREATE OR REPLACE FUNCTION obtener_pedidos_rango(
+    p_cliente_id INTEGER,
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE
+)
+RETURNS TABLE (
+    pedido_id INTEGER,
+    producto VARCHAR,
+    monto DECIMAL,
+    fecha DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT p.pedido_id, p.producto, p.monto, p.fecha
+    FROM pedidos p
+    WHERE p.cliente_id = p_cliente_id
+    AND p.fecha BETWEEN p_fecha_inicio AND p_fecha_fin;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Usar
+SELECT * FROM obtener_pedidos_rango(1, '2024-01-01', '2024-12-31');</code></pre>
+
+                    <h3>Función que Modifica Datos</h3>
+                    <pre><code class="language-sql">CREATE OR REPLACE FUNCTION registrar_pedido(
+    p_cliente_id INTEGER,
+    p_producto VARCHAR,
+    p_monto DECIMAL
+)
+RETURNS INTEGER AS $$
+DECLARE
+    nuevo_pedido_id INTEGER;
+BEGIN
+    INSERT INTO pedidos (cliente_id, producto, monto, fecha)
+    VALUES (p_cliente_id, p_producto, p_monto, CURRENT_DATE)
+    RETURNING pedido_id INTO nuevo_pedido_id;
+    
+    RETURN nuevo_pedido_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Usar
+SELECT registrar_pedido(1, 'Tablet', 450);</code></pre>
+
+                    <h3>Procedure (PostgreSQL 11+)</h3>
+                    <pre><code class="language-sql">CREATE OR REPLACE PROCEDURE actualizar_precios(p_porcentaje DECIMAL)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE pedidos
+    SET monto = monto * (1 + p_porcentaje / 100);
+    
+    COMMIT;
+END;
+$$;
+
+-- Llamar al procedure
+CALL actualizar_precios(10);  -- Aumento del 10%</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.5 Triggers (Disparadores)</h2>
+                    
+                    <h3>Trigger para Auditoría</h3>
+                    <pre><code class="language-sql">-- Tabla de auditoría
+CREATE TABLE auditoria_pedidos (
+    auditoria_id SERIAL PRIMARY KEY,
+    pedido_id INTEGER,
+    accion VARCHAR(10),
+    monto_anterior DECIMAL,
+    monto_nuevo DECIMAL,
+    usuario VARCHAR(100),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Función trigger
+CREATE OR REPLACE FUNCTION fn_auditoria_pedidos()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF TG_OP = 'INSERT' THEN
+        INSERT INTO auditoria_pedidos (pedido_id, accion, monto_nuevo, usuario)
+        VALUES (NEW.pedido_id, 'INSERT', NEW.monto, CURRENT_USER);
+        RETURN NEW;
+    ELSIF TG_OP = 'UPDATE' THEN
+        INSERT INTO auditoria_pedidos (pedido_id, accion, monto_anterior, monto_nuevo, usuario)
+        VALUES (NEW.pedido_id, 'UPDATE', OLD.monto, NEW.monto, CURRENT_USER);
+        RETURN NEW;
+    ELSIF TG_OP = 'DELETE' THEN
+        INSERT INTO auditoria_pedidos (pedido_id, accion, monto_anterior, usuario)
+        VALUES (OLD.pedido_id, 'DELETE', OLD.monto, CURRENT_USER);
+        RETURN OLD;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Crear trigger
+CREATE TRIGGER trg_auditoria_pedidos
+AFTER INSERT OR UPDATE OR DELETE ON pedidos
+FOR EACH ROW EXECUTE FUNCTION fn_auditoria_pedidos();</code></pre>
+
+                    <h3>Trigger para Validación</h3>
+                    <pre><code class="language-sql">CREATE OR REPLACE FUNCTION fn_validar_monto_pedido()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF NEW.monto < 0 THEN
+        RAISE EXCEPTION 'El monto del pedido no puede ser negativo';
+    END IF;
+    
+    IF NEW.monto > 100000 THEN
+        RAISE NOTICE 'Pedido de alto valor registrado';
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_validar_monto
+BEFORE INSERT OR UPDATE ON pedidos
+FOR EACH ROW EXECUTE FUNCTION fn_validar_monto_pedido();</code></pre>
+
+                    <h3>Trigger para Actualización Automática</h3>
+                    <pre><code class="language-sql">-- Tabla con timestamp de actualización
+CREATE TABLE productos (
+    producto_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100),
+    precio DECIMAL,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Función para actualizar timestamp
+CREATE OR REPLACE FUNCTION fn_actualizar_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.actualizado_en = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Trigger
+CREATE TRIGGER trg_actualizar_timestamp
+BEFORE UPDATE ON productos
+FOR EACH ROW EXECUTE FUNCTION fn_actualizar_timestamp();</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.6 Ejercicios Prácticos</h2>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 1: Sistema de Blog</h4>
+                        <pre><code class="language-sql">-- Crea un sistema de blog con:
+-- 1. Tablas: usuarios, posts, comentarios, categorias
+-- 2. Vistas: posts_con_comentarios, resumen_usuarios
+-- 3. Función: contar_comentarios(post_id)
+-- 4. Trigger: actualizar fecha_modificación al editar post</code></pre>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 2: Reportes Avanzados</h4>
+                        <pre><code class="language-sql">-- Crea consultas para:
+-- 1. Top 5 clientes por gasto total
+-- 2. Productos más vendidos por mes
+-- 3. Clientes que no han comprado en 30 días
+-- 4. Comparativo de ventas mes actual vs mes anterior</code></pre>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>4.7 Resumen del Tema</h2>
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>JOINs permiten combinar datos de múltiples tablas</li>
+                            <li>Subconsultas pueden ir en WHERE, SELECT o FROM</li>
+                            <li>Vistas simplifican consultas complejas y reutilizan código</li>
+                            <li>Funciones almacenadas encapsulan lógica de negocio</li>
+                            <li>Triggers ejecutan código automáticamente ante eventos</li>
+                        </ul>
+                    </div>
+                    <div class="next-topic">
+                        <a href="05-buenas-practicas.html" class="btn btn-primary">Siguiente Tema: 05 - Buenas Prácticas →</a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>

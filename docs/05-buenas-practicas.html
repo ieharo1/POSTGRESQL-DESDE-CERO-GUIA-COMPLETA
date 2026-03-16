@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>05 - Buenas Prácticas | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo"><span class="logo-icon">🐘</span><span class="logo-text">PostgreSQL desde Cero</span></div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav"><ul>
+                    <li><a href="01-introduccion.html">01 - Introducción</a></li>
+                    <li><a href="02-instalacion.html">02 - Instalación</a></li>
+                    <li><a href="03-conceptos-basicos.html">03 - Conceptos Básicos</a></li>
+                    <li><a href="04-ejemplos-practicos.html">04 - Ejemplos Prácticos</a></li>
+                    <li><a href="05-buenas-practicas.html" class="active">05 - Buenas Prácticas</a></li>
+                    <li><a href="06-casos-reales.html">06 - Casos Reales</a></li>
+                    <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                </ul></nav>
+            </aside>
+
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 05: Buenas Prácticas en PostgreSQL</h1>
+                    <p class="docs-intro">Aprende indexación estratégica, optimización de consultas, EXPLAIN, y diseño de esquemas eficientes.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>5.1 Indexación Estratégica</h2>
+                    
+                    <h3>Tipos de Índices</h3>
+                    <pre><code class="language-sql">-- Índice B-Tree (por defecto, para igualdad y rangos)
+CREATE INDEX idx_email ON clientes(email);
+CREATE INDEX idx_fecha ON pedidos(fecha);
+
+-- Índice compuesto (múltiples columnas)
+CREATE INDEX idx_cliente_fecha ON pedidos(cliente_id, fecha);
+
+-- Índice UNIQUE (garantiza unicidad)
+CREATE UNIQUE INDEX idx_email_unico ON clientes(email);
+
+-- Índice Hash (solo para igualdad)
+CREATE INDEX idx_hash ON clientes USING HASH(email);
+
+-- Índice GIN (para JSONB, arrays, texto completo)
+CREATE INDEX idx_jsonb ON productos USING GIN(caracteristicas);
+CREATE INDEX idx_array ON productos USING GIN(etiquetas);
+
+-- Índice GiST (para datos geoespaciales, rangos)
+CREATE INDEX idx_gist ON ubicaciones USING GIST(coordenadas);
+
+-- Índice parcial (solo para filas que cumplen condición)
+CREATE INDEX idx_activos ON clientes(email) WHERE activo = true;
+
+-- Índice con expresión
+CREATE INDEX idx_nombre_lower ON clientes(LOWER(nombre));</code></pre>
+
+                    <h3>Cuándo Usar Índices</h3>
+                    <div class="info-box">
+                        <p><strong>✅ Usar índices en:</strong></p>
+                        <ul>
+                            <li>Columnas usadas frecuentemente en WHERE</li>
+                            <li>Columnas de JOIN (claves foráneas)</li>
+                            <li>Columnas usadas en ORDER BY</li>
+                            <li>Columnas con alta selectividad (muchos valores únicos)</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>❌ Evitar índices en:</strong></p>
+                        <ul>
+                            <li>Tablas pequeñas (< 1000 filas)</li>
+                            <li>Columnas con pocos valores únicos (género, estado)</li>
+                            <li>Columnas muy actualizadas (cada UPDATE actualiza el índice)</li>
+                        </ul>
+                    </div>
+
+                    <h3>Analizar y Mantener Índices</h3>
+                    <pre><code class="language-sql">-- Ver índices de una tabla
+SELECT indexname, indexdef 
+FROM pg_indexes 
+WHERE tablename = 'pedidos';
+
+-- Ver tamaño de índices
+SELECT 
+    indexname,
+    pg_size_pretty(pg_relation_size(indexname::regclass)) as size
+FROM pg_indexes
+WHERE schemaname = 'public';
+
+-- Eliminar índice
+DROP INDEX IF EXISTS idx_email;
+
+-- Reindexar (reconstruir índice)
+REINDEX TABLE clientes;
+REINDEX INDEX idx_email;
+
+-- ANALYZE para actualizar estadísticas
+ANALYZE clientes;
+ANALYZE VERBOSE;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.2 EXPLAIN y Optimización</h2>
+                    
+                    <h3>Usar EXPLAIN</h3>
+                    <pre><code class="language-sql">-- Ver plan de ejecución
+EXPLAIN SELECT * FROM clientes WHERE email = 'juan@email.com';
+
+-- Con estadísticas reales de ejecución
+EXPLAIN ANALYZE SELECT * FROM clientes WHERE email = 'juan@email.com';
+
+-- Con buffers y detalles adicionales
+EXPLAIN (ANALYZE, BUFFERS, VERBOSE) 
+SELECT * FROM clientes WHERE email = 'juan@email.com';</code></pre>
+
+                    <h3>Interpretar EXPLAIN</h3>
+                    <pre><code class="language-sql">-- Ejemplo de output de EXPLAIN ANALYZE:
+/*
+Seq Scan on clientes  (cost=0.00..35.50 rows=1 width=100) 
+  (actual time=0.500..15.200 rows=1 loops=1)
+  Filter: (email = 'juan@email.com'::text)
+  Rows Removed by Filter: 9999
+Planning Time: 0.100 ms
+Execution Time: 15.300 ms
+*/
+
+-- Después de agregar índice:
+/*
+Index Scan using idx_email on clientes  (cost=0.29..8.31 rows=1 width=100)
+  (actual time=0.050..0.051 rows=1 loops=1)
+  Index Cond: (email = 'juan@email.com'::text)
+Planning Time: 0.150 ms
+Execution Time: 0.100 ms
+*/
+
+-- ¡150 veces más rápido con índice!</code></pre>
+
+                    <h3>Tipos de Scan</h3>
+                    <table class="docs-table">
+                        <thead><tr><th>Tipo</th><th>Cuándo se usa</th><th>Rendimiento</th></tr></thead>
+                        <tbody>
+                            <tr><td>Seq Scan</td><td>Tablas pequeñas o sin índice</td><td>Lento en tablas grandes</td></tr>
+                            <tr><td>Index Scan</td><td>Con índice, recupera filas</td><td>Rápido</td></tr>
+                            <tr><td>Index Only Scan</td><td>Solo datos del índice</td><td>Muy rápido</td></tr>
+                            <tr><td>Bitmap Heap Scan</td><td>Múltiples condiciones</td><td>Moderado</td></tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Optimizar Consultas</h3>
+                    <pre><code class="language-sql">-- ❌ Lento: Función en columna indexed
+SELECT * FROM clientes WHERE LOWER(email) = 'juan@email.com';
+
+-- ✅ Rápido: Índice de expresión o comparar directamente
+SELECT * FROM clientes WHERE email = 'Juan@email.com';
+
+-- ❌ Lento: SELECT *
+SELECT * FROM clientes WHERE id = 1;
+
+-- ✅ Rápido: Solo columnas necesarias
+SELECT id, nombre, email FROM clientes WHERE id = 1;
+
+-- ❌ Lento: LIKE con wildcard al inicio
+SELECT * FROM clientes WHERE nombre LIKE '%juan%';
+
+-- ✅ Rápido: LIKE con wildcard al final (usa índice)
+SELECT * FROM clientes WHERE nombre LIKE 'juan%';
+
+-- ❌ Lento: OR que previene uso de índices
+SELECT * FROM pedidos WHERE cliente_id = 1 OR fecha > '2024-01-01';
+
+-- ✅ Rápido: UNION ALL
+SELECT * FROM pedidos WHERE cliente_id = 1
+UNION ALL
+SELECT * FROM pedidos WHERE fecha > '2024-01-01';</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.3 Diseño de Esquemas Eficientes</h2>
+                    
+                    <h3>Normalización</h3>
+                    <pre><code class="language-sql">-- 1FN: Valores atómicos (no arrays en columnas)
+-- ❌ Mal diseño
+CREATE TABLE pedidos_mal (
+    pedido_id INTEGER,
+    productos TEXT[]  -- Array de productos
+);
+
+-- ✅ Buen diseño
+CREATE TABLE pedidos_bien (
+    pedido_id INTEGER PRIMARY KEY,
+    fecha DATE
+);
+
+CREATE TABLE detalle_pedido (
+    pedido_id INTEGER REFERENCES pedidos,
+    producto_id INTEGER REFERENCES productos,
+    cantidad INTEGER,
+    PRIMARY KEY (pedido_id, producto_id)
+);
+
+-- 2FN: Dependencia completa de la PK
+-- 3FN: Sin dependencias transitivas</code></pre>
+
+                    <h3>Desnormalización Estratégica</h3>
+                    <pre><code class="language-sql">-- A veces, desnormalizar mejora rendimiento
+
+-- Agregar columna calculada para evitar JOINs frecuentes
+ALTER TABLE pedidos ADD COLUMN cliente_nombre VARCHAR(100);
+
+-- Trigger para mantener actualizado
+CREATE OR REPLACE FUNCTION fn_actualizar_cliente_nombre()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.cliente_nombre := (SELECT nombre FROM clientes WHERE cliente_id = NEW.cliente_id);
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_cliente_nombre
+BEFORE INSERT OR UPDATE ON pedidos
+FOR EACH ROW EXECUTE FUNCTION fn_actualizar_cliente_nombre();</code></pre>
+
+                    <h3>Particionamiento de Tablas</h3>
+                    <pre><code class="language-sql">-- Para tablas muy grandes (> 10 millones de filas)
+
+-- Tabla particionada por rango de fechas
+CREATE TABLE pedidos (
+    pedido_id INTEGER,
+    cliente_id INTEGER,
+    monto DECIMAL,
+    fecha DATE
+) PARTITION BY RANGE (fecha);
+
+-- Crear particiones
+CREATE TABLE pedidos_2023 PARTITION OF pedidos
+    FOR VALUES FROM ('2023-01-01') TO ('2024-01-01');
+
+CREATE TABLE pedidos_2024 PARTITION OF pedidos
+    FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');
+
+-- Las consultas automáticamente usan solo la partición relevante
+SELECT * FROM pedidos WHERE fecha BETWEEN '2024-06-01' AND '2024-06-30';
+-- Solo escanea pedidos_2024</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.4 Transacciones y Concurrencia</h2>
+                    
+                    <h3>Usar Transacciones</h3>
+                    <pre><code class="language-sql">-- Transacción explícita
+BEGIN;
+
+UPDATE cuentas SET saldo = saldo - 100 WHERE cuenta_id = 1;
+UPDATE cuentas SET saldo = saldo + 100 WHERE cuenta_id = 2;
+
+-- Confirmar cambios
+COMMIT;
+
+-- O revertir en caso de error
+ROLLBACK;
+
+-- Transacción con punto de guardado
+BEGIN;
+
+INSERT INTO pedidos VALUES (1, 1, 'Producto', 100);
+SAVEPOINT sp1;
+
+INSERT INTO detalle_pedido VALUES (1, 1, 2);
+
+-- Si hay error, volver al savepoint
+ROLLBACK TO sp1;
+
+COMMIT;</code></pre>
+
+                    <h3>Niveles de Aislamiento</h3>
+                    <pre><code class="language-sql">-- Configurar nivel de aislamiento
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;  -- Por defecto
+SET TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+-- Ejemplo con REPEATABLE READ
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+
+SELECT AVG(monto) FROM pedidos;  -- Primera lectura
+SELECT AVG(monto) FROM pedidos;  -- Misma lectura, incluso si otros modifican
+
+COMMIT;</code></pre>
+
+                    <h3>Bloqueos (Locks)</h3>
+                    <pre><code class="language-sql">-- Bloqueo explícito de fila
+BEGIN;
+SELECT * FROM cuentas WHERE cuenta_id = 1 FOR UPDATE;
+-- Otras transacciones no pueden modificar esta fila hasta COMMIT
+UPDATE cuentas SET saldo = saldo - 100 WHERE cuenta_id = 1;
+COMMIT;
+
+-- Bloqueo solo para lectura
+SELECT * FROM cuentas WHERE cuenta_id = 1 FOR SHARE;
+
+-- Timeout para evitar bloqueos eternos
+SET lock_timeout = '5s';</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.5 Seguridad</h2>
+                    
+                    <h3>Gestión de Usuarios y Permisos</h3>
+                    <pre><code class="language-sql">-- Crear usuario con contraseña
+CREATE USER app_user WITH PASSWORD 'contraseña_segura';
+
+-- Crear usuario sin login (para roles)
+CREATE ROLE rol_lectura NOLOGIN;
+
+-- Dar permisos específicos
+GRANT CONNECT ON DATABASE mi_db TO app_user;
+GRANT USAGE ON SCHEMA public TO app_user;
+GRANT SELECT ON ALL TABLES IN SCHEMA public TO app_user;
+GRANT INSERT, UPDATE ON pedidos TO app_user;
+
+-- Revocar permisos
+REVOKE DELETE ON pedidos FROM app_user;
+
+-- Ver permisos
+\du  -- En psql
+SELECT * FROM information_schema.role_table_grants;</code></pre>
+
+                    <h3>Row Level Security (RLS)</h3>
+                    <pre><code class="language-sql">-- Habilitar RLS en tabla
+ALTER TABLE pedidos ENABLE ROW LEVEL SECURITY;
+
+-- Política: cada usuario solo ve sus pedidos
+CREATE POLICY politica_usuario ON pedidos
+    FOR ALL
+    TO app_user
+    USING (cliente_id = current_setting('app.current_user_id')::integer);
+
+-- Establecer el ID del usuario actual
+SET app.current_user_id = '1';
+
+-- Ahora las consultas automáticamente filtran por usuario
+SELECT * FROM pedidos;  -- Solo ve pedidos del usuario 1</code></pre>
+
+                    <h3>Encriptación de Datos</h3>
+                    <pre><code class="language-sql">-- Usar pgcrypto para encriptar
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Encriptar columna
+ALTER TABLE usuarios ADD COLUMN password_hash TEXT;
+UPDATE usuarios SET password_hash = crypt('contraseña', gen_salt('bf'));
+
+-- Verificar contraseña
+SELECT * FROM usuarios 
+WHERE password_hash = crypt('contraseña_ingresada', password_hash);
+
+-- Encriptar datos sensibles
+ALTER TABLE empleados ADD COLUMN ssn_encrypted BYTEA;
+UPDATE empleados SET ssn_encrypted = pgp_sym_encrypt('123-45-6789', 'clave_maestra');</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.6 Backup y Recovery</h2>
+                    
+                    <h3>Backup con pg_dump</h3>
+                    <pre><code class="language-bash"># Backup completo de base de datos
+pg_dump -U postgres mi_db > backup.sql
+
+# Backup en formato comprimido
+pg_dump -U postgres -Fc mi_db > backup.dump
+
+# Backup solo esquema
+pg_dump -U postgres -s mi_db > schema.sql
+
+# Backup solo datos
+pg_dump -U postgres -a mi_db > data.sql
+
+# Backup de tabla específica
+pg_dump -U postgres -t clientes mi_db > clientes.sql
+
+# Backup remoto
+pg_dump -h servidor.com -U postgres mi_db > backup.sql</code></pre>
+
+                    <h3>Restaurar Backup</h3>
+                    <pre><code class="language-bash"># Restaurar desde SQL
+psql -U postgres mi_db < backup.sql
+
+# Restaurar desde dump
+pg_restore -U postgres -d mi_db backup.dump
+
+# Restaurar solo esquema
+pg_restore -U postgres -s -d mi_db backup.dump
+
+# Restaurar solo datos
+pg_restore -U postgres -a -d mi_db backup.dump</code></pre>
+
+                    <h3>Backup Continuo con WAL</h3>
+                    <pre><code class="language-bash"># Configurar archive_mode en postgresql.conf
+archive_mode = on
+archive_command = 'cp %p /backup/wal/%f'
+
+# Backup base para Point-in-Time Recovery
+pg_basebackup -U postgres -D /backup/base -Ft -z -P
+
+# Recovery a punto específico en el tiempo
+# 1. Restaurar backup base
+# 2. Configurar recovery_target_time en postgresql.conf
+# 3. Los WAL se aplican automáticamente hasta ese punto</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.7 Monitoreo</h2>
+                    
+                    <h3>Consultas de Monitoreo</h3>
+                    <pre><code class="language-sql">-- Consultas más lentas
+SELECT query, calls, total_time, mean_time
+FROM pg_stat_statements
+ORDER BY mean_time DESC
+LIMIT 10;
+
+-- Tablas más grandes
+SELECT 
+    relname AS tabla,
+    pg_size_pretty(pg_total_relation_size(relid)) AS tamaño
+FROM pg_catalog.pg_statio_user_tables
+ORDER BY pg_total_relation_size(relid) DESC;
+
+-- Conexiones activas
+SELECT 
+    datname,
+    usename,
+    state,
+    COUNT(*) as cantidad
+FROM pg_stat_activity
+GROUP BY datname, usename, state;
+
+-- Índices no usados
+SELECT schemaname, tablename, indexname
+FROM pg_stat_user_indexes
+WHERE idx_scan = 0;
+
+-- Tablas que necesitan VACUUM
+SELECT 
+    schemaname,
+    relname,
+    n_dead_tup,
+    n_live_tup,
+    last_vacuum,
+    last_autovacuum
+FROM pg_stat_user_tables
+WHERE n_dead_tup > 1000
+ORDER BY n_dead_tup DESC;</code></pre>
+
+                    <h3>Extensiones de Monitoreo</h3>
+                    <pre><code class="language-sql">-- Habilitar pg_stat_statements
+CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+-- Habilitar auto_explain para logs automáticos
+LOAD 'auto_explain';
+SET auto_explain.log_min_duration = '1s';  -- Log consultas > 1 segundo
+SET auto_explain.log_analyze = on;
+
+-- Ver tamaño de bases de datos
+SELECT 
+    datname,
+    pg_size_pretty(pg_database_size(datname)) AS tamaño
+FROM pg_database
+ORDER BY pg_database_size(datname) DESC;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>5.8 Resumen del Tema</h2>
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>Índices mejoran lecturas pero ralentizan escrituras</li>
+                            <li>EXPLAIN ANALYZE revela el plan de ejecución real</li>
+                            <li>Normalizar para integridad, desnormalizar para rendimiento</li>
+                            <li>Transacciones aseguran consistencia de datos</li>
+                            <li>Backup regular es esencial para recuperación de desastres</li>
+                        </ul>
+                    </div>
+                    <div class="next-topic">
+                        <a href="06-casos-reales.html" class="btn btn-primary">Siguiente Tema: 06 - Casos Reales →</a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>

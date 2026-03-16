@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>06 - Casos Reales | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo"><span class="logo-icon">🐘</span><span class="logo-text">PostgreSQL desde Cero</span></div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav"><ul>
+                    <li><a href="01-introduccion.html">01 - Introducción</a></li>
+                    <li><a href="02-instalacion.html">02 - Instalación</a></li>
+                    <li><a href="03-conceptos-basicos.html">03 - Conceptos Básicos</a></li>
+                    <li><a href="04-ejemplos-practicos.html">04 - Ejemplos Prácticos</a></li>
+                    <li><a href="05-buenas-practicas.html">05 - Buenas Prácticas</a></li>
+                    <li><a href="06-casos-reales.html" class="active">06 - Casos Reales</a></li>
+                    <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                </ul></nav>
+            </aside>
+
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 06: Casos Reales de Implementación</h1>
+                    <p class="docs-intro">Explora implementaciones reales: replicación, clustering, patrones de diseño y arquitecturas de producción.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>6.1 Replicación Maestro-Esclavo</h2>
+                    
+                    <h3>Configuración del Maestro</h3>
+                    <pre><code class="language-bash"># En postgresql.conf del maestro:
+wal_level = replica
+max_wal_senders = 3
+wal_keep_size = 64MB
+archive_mode = on
+archive_command = 'cp %p /var/lib/postgresql/wal_archive/%f'
+
+# En pg_hba.conf del maestro:
+host    replication     replicador      192.168.1.0/24        md5
+
+# Crear usuario replicador
+CREATE ROLE replicador WITH REPLICATION LOGIN PASSWORD 'password_seguro';</code></pre>
+
+                    <h3>Configuración del Esclavo</h3>
+                    <pre><code class="language-bash"># Copiar datos del maestro
+pg_basebackup -h maestro -D /var/lib/postgresql/data -U replicador -P -R
+
+# En postgresql.conf del esclavo:
+hot_standby = on
+
+# En standby.signal (archivo vacío que indica que es esclavo):
+touch /var/lib/postgresql/data/standby.signal
+
+# En primary_conninfo.info:
+primary_conninfo = 'host=maestro port=5432 user=replicador password=password_seguro'</code></pre>
+
+                    <h3>Verificar Replicación</h3>
+                    <pre><code class="language-sql">-- En el maestro:
+SELECT client_addr, state, sent_lsn, write_lsn, flush_lsn, replay_lsn
+FROM pg_stat_replication;
+
+-- En el esclavo (solo lectura):
+SELECT pg_is_in_recovery();  -- Devuelve true si es esclavo
+SELECT pg_last_wal_receive_lsn(), pg_last_wal_replay_lsn();</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>6.2 Patrón: E-commerce</h2>
+                    
+                    <h3>Esquema Completo</h3>
+                    <pre><code class="language-sql">-- Categorías de productos
+CREATE TABLE categorias (
+    categoria_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    padre_id INTEGER REFERENCES categorias(categoria_id),
+    orden INTEGER DEFAULT 0
+);
+
+-- Productos
+CREATE TABLE productos (
+    producto_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(200) NOT NULL,
+    descripcion TEXT,
+    precio DECIMAL(10,2) NOT NULL CHECK (precio >= 0),
+    stock INTEGER DEFAULT 0 CHECK (stock >= 0),
+    categoria_id INTEGER REFERENCES categorias(categoria_id),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    actualizado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Clientes
+CREATE TABLE clientes (
+    cliente_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    telefono VARCHAR(20),
+    direccion TEXT,
+    ciudad VARCHAR(100),
+    pais VARCHAR(100),
+    codigo_postal VARCHAR(20),
+    activo BOOLEAN DEFAULT true,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Órdenes
+CREATE TABLE ordenes (
+    orden_id SERIAL PRIMARY KEY,
+    cliente_id INTEGER NOT NULL REFERENCES clientes(cliente_id),
+    estado VARCHAR(50) DEFAULT 'pendiente',
+    subtotal DECIMAL(10,2),
+    impuesto DECIMAL(10,2),
+    total DECIMAL(10,2),
+    direccion_envio TEXT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Detalle de órdenes
+CREATE TABLE ordenes_detalle (
+    orden_id INTEGER REFERENCES ordenes(orden_id),
+    producto_id INTEGER REFERENCES productos(producto_id),
+    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    subtotal DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (orden_id, producto_id)
+);
+
+-- Carrito de compras
+CREATE TABLE carrito (
+    carrito_id SERIAL PRIMARY KEY,
+    cliente_id INTEGER REFERENCES clientes(cliente_id),
+    session_id VARCHAR(255),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE carrito_items (
+    item_id SERIAL PRIMARY KEY,
+    carrito_id INTEGER REFERENCES carrito(carrito_id),
+    producto_id INTEGER REFERENCES productos(producto_id),
+    cantidad INTEGER NOT NULL CHECK (cantidad > 0),
+    UNIQUE(carrito_id, producto_id)
+);</code></pre>
+
+                    <h3>Triggers para E-commerce</h3>
+                    <pre><code class="language-sql">-- Actualizar stock al crear orden
+CREATE OR REPLACE FUNCTION fn_actualizar_stock()
+RETURNS TRIGGER AS $$
+BEGIN
+    UPDATE productos 
+    SET stock = stock - NEW.cantidad
+    WHERE producto_id = NEW.producto_id;
+    
+    IF (SELECT stock FROM productos WHERE producto_id = NEW.producto_id) < 0 THEN
+        RAISE EXCEPTION 'Stock insuficiente para producto %', NEW.producto_id;
+    END IF;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_actualizar_stock
+AFTER INSERT ON ordenes_detalle
+FOR EACH ROW EXECUTE FUNCTION fn_actualizar_stock();
+
+-- Calcular totales de orden
+CREATE OR REPLACE FUNCTION fn_calcular_total_orden()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_subtotal DECIMAL;
+    v_impuesto DECIMAL;
+BEGIN
+    SELECT COALESCE(SUM(subtotal), 0) INTO v_subtotal
+    FROM ordenes_detalle WHERE orden_id = NEW.orden_id;
+    
+    v_impuesto := v_subtotal * 0.16;  -- 16% IVA
+    
+    UPDATE ordenes 
+    SET subtotal = v_subtotal, 
+        impuesto = v_impuesto, 
+        total = v_subtotal + v_impuesto
+    WHERE orden_id = NEW.orden_id;
+    
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER trg_calcular_total_orden
+AFTER INSERT OR UPDATE ON ordenes_detalle
+FOR EACH ROW EXECUTE FUNCTION fn_calcular_total_orden();</code></pre>
+
+                    <h3>Consultas Comunes de E-commerce</h3>
+                    <pre><code class="language-sql">-- Productos más vendidos
+SELECT 
+    p.nombre,
+    SUM(od.cantidad) as total_vendido,
+    SUM(od.subtotal) as total_ingresos
+FROM productos p
+JOIN ordenes_detalle od ON p.producto_id = od.producto_id
+GROUP BY p.producto_id, p.nombre
+ORDER BY total_vendido DESC
+LIMIT 10;
+
+-- Clientes más valiosos
+SELECT 
+    c.nombre,
+    c.email,
+    COUNT(o.orden_id) as num_ordenes,
+    SUM(o.total) as total_gastado
+FROM clientes c
+JOIN ordenes o ON c.cliente_id = o.cliente_id
+GROUP BY c.cliente_id, c.nombre, c.email
+ORDER BY total_gastado DESC
+LIMIT 10;
+
+-- Stock bajo
+SELECT nombre, stock, precio
+FROM productos
+WHERE stock < 10
+ORDER BY stock ASC;
+
+-- Ventas por mes
+SELECT 
+    DATE_TRUNC('month', o.creado_en) as mes,
+    COUNT(*) as num_ordenes,
+    SUM(o.total) as total_ventas
+FROM ordenes o
+GROUP BY DATE_TRUNC('month', o.creado_en)
+ORDER BY mes DESC;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>6.3 Patrón: Sistema de Usuarios y Roles</h2>
+                    
+                    <pre><code class="language-sql">-- Roles
+CREATE TABLE roles (
+    rol_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE NOT NULL,
+    descripcion TEXT
+);
+
+-- Usuarios
+CREATE TABLE usuarios (
+    usuario_id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    activo BOOLEAN DEFAULT true,
+    ultimo_acceso TIMESTAMP,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Usuarios-Roles (muchos a muchos)
+CREATE TABLE usuarios_roles (
+    usuario_id INTEGER REFERENCES usuarios(usuario_id),
+    rol_id INTEGER REFERENCES roles(rol_id),
+    PRIMARY KEY (usuario_id, rol_id)
+);
+
+-- Permisos
+CREATE TABLE permisos (
+    permiso_id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) UNIQUE NOT NULL,
+    descripcion TEXT,
+    recurso VARCHAR(100) NOT NULL,  -- ej: 'usuarios', 'productos'
+    accion VARCHAR(50) NOT NULL     -- ej: 'crear', 'leer', 'actualizar', 'eliminar'
+);
+
+-- Roles-Permisos
+CREATE TABLE roles_permisos (
+    rol_id INTEGER REFERENCES roles(rol_id),
+    permiso_id INTEGER REFERENCES permisos(permiso_id),
+    PRIMARY KEY (rol_id, permiso_id)
+);
+
+-- Función para verificar permisos
+CREATE OR REPLACE FUNCTION fn_tiene_permiso(
+    p_usuario_id INTEGER,
+    p_recurso VARCHAR,
+    p_accion VARCHAR
+)
+RETURNS BOOLEAN AS $$
+DECLARE
+    v_tiene BOOLEAN;
+BEGIN
+    SELECT EXISTS (
+        SELECT 1 FROM usuarios_roles ur
+        JOIN roles_permisos rp ON ur.rol_id = rp.rol_id
+        JOIN permisos p ON rp.permiso_id = p.permiso_id
+        WHERE ur.usuario_id = p_usuario_id
+        AND p.recurso = p_recurso
+        AND p.accion = p_accion
+    ) INTO v_tiene;
+    
+    RETURN v_tiene;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Uso: SELECT fn_tiene_permiso(1, 'productos', 'eliminar');</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>6.4 Patrón: Audit Trail</h2>
+                    
+                    <pre><code class="language-sql">-- Tabla genérica de auditoría
+CREATE TABLE auditoria (
+    auditoria_id BIGSERIAL PRIMARY KEY,
+    tabla_nombre VARCHAR(100) NOT NULL,
+    registro_id INTEGER NOT NULL,
+    accion VARCHAR(10) NOT NULL,  -- INSERT, UPDATE, DELETE
+    datos_antiguos JSONB,
+    datos_nuevos JSONB,
+    usuario_id INTEGER,
+    usuario_nombre VARCHAR(100),
+    ip_address INET,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Función trigger genérica
+CREATE OR REPLACE FUNCTION fn_auditoria_generica()
+RETURNS TRIGGER AS $$
+DECLARE
+    v_datos_antiguos JSONB;
+    v_datos_nuevos JSONB;
+BEGIN
+    IF TG_OP = 'DELETE' THEN
+        v_datos_antiguos := to_jsonb(OLD);
+        INSERT INTO auditoria (tabla_nombre, registro_id, accion, datos_antiguos, usuario_nombre)
+        VALUES (TG_TABLE_NAME, OLD.id, TG_OP, v_datos_antiguos, CURRENT_USER);
+        RETURN OLD;
+    ELSIF TG_OP = 'INSERT' THEN
+        v_datos_nuevos := to_jsonb(NEW);
+        INSERT INTO auditoria (tabla_nombre, registro_id, accion, datos_nuevos, usuario_nombre)
+        VALUES (TG_TABLE_NAME, NEW.id, TG_OP, v_datos_nuevos, CURRENT_USER);
+        RETURN NEW;
+    ELSIF TG_OP = 'UPDATE' THEN
+        v_datos_antiguos := to_jsonb(OLD);
+        v_datos_nuevos := to_jsonb(NEW);
+        INSERT INTO auditoria (tabla_nombre, registro_id, accion, datos_antiguos, datos_nuevos, usuario_nombre)
+        VALUES (TG_TABLE_NAME, NEW.id, TG_OP, v_datos_antiguos, v_datos_nuevos, CURRENT_USER);
+        RETURN NEW;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Aplicar a cualquier tabla
+CREATE TRIGGER trg_auditoria_usuarios
+AFTER INSERT OR UPDATE OR DELETE ON usuarios
+FOR EACH ROW EXECUTE FUNCTION fn_auditoria_generica();
+
+-- Consultar auditoría
+SELECT * FROM auditoria 
+WHERE tabla_nombre = 'usuarios' 
+ORDER BY creado_en DESC;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>6.5 Patrón: Soft Delete</h2>
+                    
+                    <pre><code class="language-sql">-- Agregar columna de eliminación lógica
+ALTER TABLE productos ADD COLUMN eliminado_en TIMESTAMP;
+ALTER TABLE productos ADD COLUMN eliminado_por INTEGER;
+
+-- Vista que excluye eliminados
+CREATE VIEW productos_activos AS
+SELECT * FROM productos WHERE eliminado_en IS NULL;
+
+-- Trigger para soft delete automático
+CREATE OR REPLACE FUNCTION fn_soft_delete()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.eliminado_en := CURRENT_TIMESTAMP;
+    NEW.eliminado_por := CURRENT_USER;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para eliminar (en lugar de trigger directo)
+CREATE OR REPLACE FUNCTION eliminar_producto(p_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE productos 
+    SET eliminado_en = CURRENT_TIMESTAMP,
+        eliminado_por = CURRENT_USER
+    WHERE producto_id = p_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Restaurar registro
+CREATE OR REPLACE FUNCTION restaurar_producto(p_id INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE productos 
+    SET eliminado_en = NULL, eliminado_por = NULL
+    WHERE producto_id = p_id;
+END;
+$$ LANGUAGE plpgsql;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>6.6 Resumen del Tema</h2>
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>La replicación permite alta disponibilidad y distribución de carga</li>
+                            <li>Los patrones de diseño resuelven problemas comunes de forma probada</li>
+                            <li>El audit trail es esencial para cumplimiento y debugging</li>
+                            <li>Soft delete permite recuperar datos eliminados accidentalmente</li>
+                            <li>Los sistemas de roles y permisos protegen el acceso a datos</li>
+                        </ul>
+                    </div>
+                    <div class="next-topic">
+                        <a href="07-proyecto-final.html" class="btn btn-primary">Siguiente Tema: 07 - Proyecto Final →</a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>

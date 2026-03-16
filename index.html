@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PostgreSQL desde Cero - Guía Completa</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <span class="logo-icon">🐘</span>
+                    <span class="logo-text">PostgreSQL desde Cero</span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#que-es">¿Qué es?</a></li>
+                    <li><a href="#arquitectura">Arquitectura</a></li>
+                    <li><a href="#temas">Temas</a></li>
+                    <li><a href="#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="inicio" class="hero">
+        <div class="container">
+            <h1>PostgreSQL desde Cero</h1>
+            <p class="hero-subtitle">Guía completa para aprender PostgreSQL desde fundamentos hasta conceptos avanzados.</p>
+            <div class="hero-buttons">
+                <a href="#que-es" class="btn btn-primary">Comenzar</a>
+                <a href="#ejemplos" class="btn btn-secondary">Ver ejemplos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ¿Qué es PostgreSQL? -->
+    <section id="que-es" class="section">
+        <div class="container">
+            <h2>¿Qué es PostgreSQL?</h2>
+            <div class="content-grid">
+                <div class="content-card">
+                    <div class="card-icon">🗄️</div>
+                    <h3>Sistema de Gestión de Bases de Datos</h3>
+                    <p>PostgreSQL es un sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, confiabilidad y cumplimiento de estándares SQL.</p>
+                </div>
+                <div class="content-card">
+                    <div class="card-icon">⚡</div>
+                    <h3>Para Qué Sirve</h3>
+                    <p>Se utiliza para almacenar, organizar y recuperar datos en aplicaciones web, sistemas empresariales, análisis de datos y aplicaciones de misión crítica.</p>
+                </div>
+                <div class="content-card">
+                    <div class="card-icon">🔧</div>
+                    <h3>Características Principales</h3>
+                    <p>Soporta JSON, índices avanzados, transacciones ACID, stored procedures, triggers, vistas materializadas y extensiones personalizables.</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4>💡 ¿Sabías qué?</h4>
+                <p>PostgreSQL es considerado el RDBMS de código abierto más avanzado del mundo. Su nombre proviene de "Post-Ingres", siendo Ingres un sistema de bases de datos desarrollado en UC Berkeley en los años 60-70.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Arquitectura -->
+    <section id="arquitectura" class="section section-alt">
+        <div class="container">
+            <h2>Arquitectura de PostgreSQL</h2>
+            <p class="section-intro">PostgreSQL utiliza una arquitectura cliente-servidor con procesos múltiples para manejar conexiones y operaciones.</p>
+
+            <div class="architecture-diagram">
+                <div class="arch-layer">
+                    <h4>Cliente / Aplicación</h4>
+                    <p>psql, pgAdmin, aplicaciones, drivers</p>
+                </div>
+                <div class="arch-arrow">⬇️</div>
+                <div class="arch-layer">
+                    <h4>Postmaster</h4>
+                    <p>Proceso principal que gestiona el cluster</p>
+                </div>
+                <div class="arch-arrow">⬇️</div>
+                <div class="arch-layer">
+                    <h4>Backend Processes</h4>
+                    <p>Procesos por conexión (query executor)</p>
+                </div>
+                <div class="arch-arrow">⬇️</div>
+                <div class="arch-layer">
+                    <h4>Storage Engine</h4>
+                    <p>Tablas, índices, WAL, buffer cache</p>
+                </div>
+            </div>
+
+            <div class="components-grid">
+                <div class="component-card">
+                    <h4>📊 Procesos Background</h4>
+                    <ul>
+                        <li>Checkpointer - Guarda cambios en disco</li>
+                        <li>WAL Writer - Escribe el log transaccional</li>
+                        <li>Autovacuum - Limpieza automática</li>
+                        <li>Stats Collector - Recopila estadísticas</li>
+                    </ul>
+                </div>
+                <div class="component-card">
+                    <h4>💾 Almacenamiento</h4>
+                    <ul>
+                        <li>Tablespaces - Ubicación física de datos</li>
+                        <li>WAL (Write-Ahead Log) - Durabilidad</li>
+                        <li>Shared Buffers - Caché en memoria</li>
+                        <li>Temp Files - Archivos temporales</li>
+                    </ul>
+                </div>
+                <div class="component-card">
+                    <h4>🔒 Concurrencia</h4>
+                    <ul>
+                        <li>MVCC - Control de concurrencia multiversión</li>
+                        <li>Row-level locking - Bloqueo por fila</li>
+                        <li>Transaction isolation - Aislamiento de transacciones</li>
+                        <li>Savepoints - Puntos de guardado</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Temas -->
+    <section id="temas" class="section">
+        <div class="container">
+            <h2>Contenido del Curso</h2>
+            <div class="topics-grid">
+                <div class="topic-card" data-topic="1">
+                    <div class="topic-number">01</div>
+                    <h3>Introducción</h3>
+                    <p>Conceptos básicos de PostgreSQL, instalación y configuración inicial del entorno.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="2">
+                    <div class="topic-number">02</div>
+                    <h3>Instalación</h3>
+                    <p>Guía paso a paso para instalar PostgreSQL en Windows, Linux y macOS.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="3">
+                    <div class="topic-number">03</div>
+                    <h3>Conceptos básicos</h3>
+                    <p>Creación de bases de datos, tablas, tipos de datos y restricciones.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="4">
+                    <div class="topic-number">04</div>
+                    <h3>Ejemplos prácticos</h3>
+                    <p>Consultas SELECT, JOINs, subconsultas y funciones de agregación.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="5">
+                    <div class="topic-number">05</div>
+                    <h3>Buenas prácticas</h3>
+                    <p>Indexación, optimización de consultas y diseño de esquemas eficientes.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="6">
+                    <div class="topic-number">06</div>
+                    <h3>Casos reales</h3>
+                    <p>Ejemplos de implementación en producción y patrones de diseño comunes.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+                <div class="topic-card" data-topic="7">
+                    <div class="topic-number">07</div>
+                    <h3>Proyecto final</h3>
+                    <p>Desarrollo de una base de datos completa para una aplicación real.</p>
+                    <a href="#" class="topic-link">Ver tema →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ejemplos -->
+    <section id="ejemplos" class="section section-alt">
+        <div class="container">
+            <h2>Ejemplos de Código</h2>
+            <div class="examples-container">
+                <div class="example-card">
+                    <h4>Crear Base de Datos</h4>
+                    <pre><code class="language-sql">CREATE DATABASE mi_base_datos;
+
+\c mi_base_datos;</code></pre>
+                </div>
+                <div class="example-card">
+                    <h4>Crear Tabla</h4>
+                    <pre><code class="language-sql">CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    activo BOOLEAN DEFAULT true
+);</code></pre>
+                </div>
+                <div class="example-card">
+                    <h4>Consulta con JOIN</h4>
+                    <pre><code class="language-sql">SELECT u.nombre, p.titulo
+FROM usuarios u
+INNER JOIN publicaciones p ON u.id = p.usuario_id
+WHERE u.activo = true
+ORDER BY p.fecha DESC;</code></pre>
+                </div>
+                <div class="example-card">
+                    <h4>Función JSON</h4>
+                    <pre><code class="language-sql">SELECT 
+    nombre,
+    datos->>'telefono' AS telefono
+FROM usuarios
+WHERE datos ? 'telefono';</code></pre>
+                </div>
+            </div>
+            <div class="text-center">
+                <a href="#" class="btn btn-primary">Ver más ejemplos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>PostgreSQL desde Cero</h4>
+                    <p>Guía educativa completa para aprender PostgreSQL desde los fundamentos hasta conceptos avanzados.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Enlaces Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#que-es">¿Qué es?</a></li>
+                        <li><a href="#temas">Temas</a></li>
+                        <li><a href="#ejemplos">Ejemplos</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Recursos</h4>
+                    <ul>
+                        <li><a href="https://www.postgresql.org/docs/" target="_blank">Docs Oficiales</a></li>
+                        <li><a href="https://www.postgresql.org/" target="_blank">Sitio Oficial</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="developer-info">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
+                <div class="developer-contact">
+                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
+                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
+                </div>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

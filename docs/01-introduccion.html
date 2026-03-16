@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>01 - Introducción | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo">
+                    <span class="logo-icon">🐘</span>
+                    <span class="logo-text">PostgreSQL desde Cero</span>
+                </div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="docs-main">
+        <div class="docs-container">
+            <!-- Sidebar -->
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav">
+                    <ul>
+                        <li><a href="01-introduccion.html" class="active">01 - Introducción</a></li>
+                        <li><a href="02-instalacion.html">02 - Instalación</a></li>
+                        <li><a href="03-conceptos-basicos.html">03 - Conceptos Básicos</a></li>
+                        <li><a href="04-ejemplos-practicos.html">04 - Ejemplos Prácticos</a></li>
+                        <li><a href="05-buenas-practicas.html">05 - Buenas Prácticas</a></li>
+                        <li><a href="06-casos-reales.html">06 - Casos Reales</a></li>
+                        <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Content -->
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 01: Introducción a PostgreSQL</h1>
+                    <p class="docs-intro">Aprende los fundamentos de PostgreSQL, su historia, características y por qué es una de las bases de datos más populares del mundo.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>1.1 ¿Qué es PostgreSQL?</h2>
+                    <div class="info-box">
+                        <p><strong>PostgreSQL</strong> es un sistema de gestión de bases de datos relacional de código abierto (RDBMS) conocido por su robustez, confiabilidad y cumplimiento de estándares SQL.</p>
+                    </div>
+                    
+                    <h3>Características Principales</h3>
+                    <ul class="feature-list">
+                        <li><strong>Código Abierto:</strong> Licencia PostgreSQL, similar a BSD/MIT</li>
+                        <li><strong>ACID Compliance:</strong> Transacciones atómicas, consistentes, aisladas y duraderas</li>
+                        <li><strong>SQL Estándar:</strong> Cumplimiento extensivo de SQL:2016</li>
+                        <li><strong>MVCC:</strong> Control de concurrencia multiversión</li>
+                        <li><strong>Extensibilidad:</strong> Soporte para tipos de datos y funciones personalizadas</li>
+                        <li><strong>JSON Nativo:</strong> Soporte completo para documentos JSON</li>
+                    </ul>
+
+                    <h3>Comparación con otras Bases de Datos</h3>
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Característica</th>
+                                <th>PostgreSQL</th>
+                                <th>MySQL</th>
+                                <th>MongoDB</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Tipo</td>
+                                <td>Relacional (SQL)</td>
+                                <td>Relacional (SQL)</td>
+                                <td>Documentos (NoSQL)</td>
+                            </tr>
+                            <tr>
+                                <td>Licencia</td>
+                                <td>PostgreSQL License</td>
+                                <td>GPL/Commercial</td>
+                                <td>SSPL/Commercial</td>
+                            </tr>
+                            <tr>
+                                <td>Transacciones</td>
+                                <td>Completo ACID</td>
+                                <td>InnoDB: ACID</td>
+                                <td>Limitado</td>
+                            </tr>
+                            <tr>
+                                <td>JSON</td>
+                                <td>JSONB optimizado</td>
+                                <td>JSON básico</td>
+                                <td>Nativo BSON</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.2 Historia de PostgreSQL</h2>
+                    
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">1986</div>
+                            <div class="timeline-content">
+                                <h4>POSTGRES</h4>
+                                <p>Michael Stonebraker inicia el proyecto POSTGRES en UC Berkeley como sucesor de Ingres.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1989</div>
+                            <div class="timeline-content">
+                                <h4>Primera Versión</h4>
+                                <p>Se lanza la primera versión de POSTGRES con soporte para tipos de datos extensibles.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1994</div>
+                            <div class="timeline-content">
+                                <h4>Postgres95</h4>
+                                <p>Andrew Yu y Jolly Chen agregan soporte para SQL, naciendo Postgres95.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1996</div>
+                            <div class="timeline-content">
+                                <h4>PostgreSQL 6.0</h4>
+                                <p>Se renombra oficialmente a PostgreSQL y se lanza como código abierto.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">2024</div>
+                            <div class="timeline-content">
+                                <h4>PostgreSQL 16+</h4>
+                                <p>Versiones modernas con mejoras en rendimiento, replicación y características avanzadas.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.3 Casos de Uso Comunes</h2>
+                    
+                    <div class="use-cases-grid">
+                        <div class="use-case-card">
+                            <div class="use-case-icon">🌐</div>
+                            <h4>Aplicaciones Web</h4>
+                            <p>Sitios web de alto tráfico que requieren integridad de datos y consultas complejas.</p>
+                            <ul>
+                                <li>E-commerce</li>
+                                <li>Redes sociales</li>
+                                <li>Sistemas de reservas</li>
+                            </ul>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon">📊</div>
+                            <h4>Análisis de Datos</h4>
+                            <p>Procesamiento analítico en línea (OLAP) y business intelligence.</p>
+                            <ul>
+                                <li>Reportes empresariales</li>
+                                <li>Data warehousing</li>
+                                <li>ETL processes</li>
+                            </ul>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon">🗺️</div>
+                            <h4>Datos Geoespaciales</h4>
+                            <p>Con la extensión PostGIS, PostgreSQL es líder en datos espaciales.</p>
+                            <ul>
+                                <li>Sistemas GIS</li>
+                                <li>Ubicación en tiempo real</li>
+                                <li>Mapas y routing</li>
+                            </ul>
+                        </div>
+                        <div class="use-case-card">
+                            <div class="use-case-icon">🔬</div>
+                            <h4>Ciencia e Investigación</h4>
+                            <p>Investigación académica y científica que requiere precisión de datos.</p>
+                            <ul>
+                                <li>Datos científicos</li>
+                                <li>Investigación médica</li>
+                                <li>Análisis estadístico</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.4 Arquitectura Básica</h2>
+                    
+                    <h3>Componentes Principales</h3>
+                    
+                    <div class="architecture-components">
+                        <div class="arch-component">
+                            <h4>📦 Postmaster</h4>
+                            <p>El proceso principal que gestiona el cluster de bases de datos. Se encarga de:</p>
+                            <ul>
+                                <li>Aceptar conexiones de clientes</li>
+                                <li>Crear procesos backend para cada conexión</li>
+                                <li>Gestionar procesos de background</li>
+                                <li>Coordinar el recovery después de fallos</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="arch-component">
+                            <h4>⚙️ Backend Processes</h4>
+                            <p>Procesos individuales creados para cada conexión de cliente:</p>
+                            <ul>
+                                <li>Ejecutan consultas SQL</li>
+                                <li>Mantienen estado de transacción</li>
+                                <li>Gestionan buffers y caché</li>
+                                <li>Se destruyen al cerrar conexión</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="arch-component">
+                            <h4>🔄 Background Processes</h4>
+                            <p>Procesos que mantienen el sistema funcionando:</p>
+                            <ul>
+                                <li><strong>Checkpointer:</strong> Guarda cambios en disco</li>
+                                <li><strong>WAL Writer:</strong> Escribe el log transaccional</li>
+                                <li><strong>Autovacuum:</strong> Limpieza automática</li>
+                                <li><strong>Stats Collector:</strong> Recopila estadísticas</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="arch-component">
+                            <h4>💾 Storage</h4>
+                            <p>Componentes de almacenamiento físico:</p>
+                            <ul>
+                                <li><strong>Tablespaces:</strong> Ubicación física de datos</li>
+                                <li><strong>WAL (Write-Ahead Log):</strong> Durabilidad</li>
+                                <li><strong>Shared Buffers:</strong> Caché en memoria</li>
+                                <li><strong>Temp Files:</strong> Archivos temporales</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.5 Primeros Pasos</h2>
+                    
+                    <h3>Conceptos Fundamentales</h3>
+                    
+                    <div class="concept-box">
+                        <h4>📁 Base de Datos</h4>
+                        <p>Una colección organizada de datos estructurados. En PostgreSQL, una instalación puede contener múltiples bases de datos.</p>
+                        <pre><code class="language-sql">-- Crear una base de datos
+CREATE DATABASE mi_base_de_datos;
+
+-- Conectarse a una base de datos
+\c mi_base_de_datos;
+
+-- Listar bases de datos
+\l</code></pre>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <h4>📋 Tabla</h4>
+                        <p>Estructura que almacena datos en filas y columnas. Cada tabla tiene un nombre único dentro de su esquema.</p>
+                        <pre><code class="language-sql">-- Crear una tabla
+CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Ver estructura de tabla
+\d usuarios</code></pre>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <h4>📝 Fila (Tuple)</h4>
+                        <p>Un registro individual en una tabla. Cada fila representa una entidad completa con valores para cada columna.</p>
+                        <pre><code class="language-sql">-- Insertar una fila
+INSERT INTO usuarios (nombre, email) 
+VALUES ('Juan Pérez', 'juan@email.com');
+
+-- Consultar filas
+SELECT * FROM usuarios;</code></pre>
+                    </div>
+                    
+                    <div class="concept-box">
+                        <h4>📊 Columna (Atributo)</h4>
+                        <p>Un campo específico en una tabla que define el tipo de dato que puede almacenar.</p>
+                        <pre><code class="language-sql">-- Agregar una columna
+ALTER TABLE usuarios 
+ADD COLUMN telefono VARCHAR(20);
+
+-- Modificar una columna
+ALTER TABLE usuarios 
+ALTER COLUMN nombre TYPE TEXT;</code></pre>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.6 Herramientas y Ecosistema</h2>
+                    
+                    <h3>Clientes y Herramientas de Administración</h3>
+                    
+                    <table class="docs-table">
+                        <thead>
+                            <tr>
+                                <th>Herramienta</th>
+                                <th>Tipo</th>
+                                <th>Descripción</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>psql</strong></td>
+                                <td>Línea de comandos</td>
+                                <td>Cliente oficial de terminal. Potente y disponible en todos los sistemas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>pgAdmin 4</strong></td>
+                                <td>GUI Web</td>
+                                <td>Herramienta oficial de administración. Completa y multiplataforma.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DBeaver</strong></td>
+                                <td>GUI Desktop</td>
+                                <td>Cliente universal de bases de datos. Soporta múltiples sistemas.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>DataGrip</strong></td>
+                                <td>IDE</td>
+                                <td>IDE profesional de JetBrains. Avanzado pero de pago.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h3>Extensiones Populares</h3>
+                    <ul class="feature-list">
+                        <li><strong>PostGIS:</strong> Soporte para datos geoespaciales</li>
+                        <li><strong>pg_stat_statements:</strong> Monitoreo de rendimiento de consultas</li>
+                        <li><strong>pgcrypto:</strong> Funciones de criptografía</li>
+                        <li><strong>uuid-ossp:</strong> Generación de UUIDs</li>
+                        <li><strong>hstore:</strong> Almacenamiento clave-valor</li>
+                    </ul>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.7 Ejercicios Prácticos</h2>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 1: Explorar psql</h4>
+                        <p><strong>Objetivo:</strong> Familiarizarse con la línea de comandos de PostgreSQL.</p>
+                        <ol>
+                            <li>Abre la terminal y ejecuta <code>psql --version</code> para verificar la instalación</li>
+                            <li>Conéctate a PostgreSQL: <code>psql -U postgres</code></li>
+                            <li>Ejecuta <code>\l</code> para listar las bases de datos</li>
+                            <li>Ejecuta <code>\?</code> para ver todos los comandos disponibles</li>
+                            <li>Sal de psql con <code>\q</code></li>
+                        </ol>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 2: Crear tu Primera Base de Datos</h4>
+                        <p><strong>Objetivo:</strong> Crear una base de datos y una tabla simple.</p>
+                        <ol>
+                            <li>Conéctate a PostgreSQL</li>
+                            <li>Crea una base de datos: <code>CREATE DATABASE biblioteca;</code></li>
+                            <li>Conéctate a ella: <code>\c biblioteca</code></li>
+                            <li>Crea una tabla de libros con los campos: id, titulo, autor, año, isbn</li>
+                            <li>Inserta 3 libros de ejemplo</li>
+                            <li>Consulta todos los libros</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 3: Explorar pgAdmin</h4>
+                        <p><strong>Objetivo:</strong> Conocer la interfaz gráfica de administración.</p>
+                        <ol>
+                            <li>Abre pgAdmin 4 en tu navegador</li>
+                            <li>Conéctate al servidor PostgreSQL</li>
+                            <li>Navega por el árbol de objetos</li>
+                            <li>Abre el Query Tool</li>
+                            <li>Ejecuta consultas SQL básicas</li>
+                            <li>Explora las herramientas de visualización</li>
+                        </ol>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>1.8 Resumen del Tema</h2>
+                    
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>PostgreSQL es un RDBMS de código abierto con más de 35 años de desarrollo</li>
+                            <li>Cumple con el estándar SQL y soporta características avanzadas como JSON y datos geoespaciales</li>
+                            <li>Utiliza una arquitectura cliente-servidor con procesos múltiples</li>
+                            <li>El ecosistema incluye herramientas como psql, pgAdmin y extensiones como PostGIS</li>
+                            <li>Es ideal para aplicaciones que requieren integridad de datos y consultas complejas</li>
+                        </ul>
+                    </div>
+
+                    <div class="next-topic">
+                        <a href="02-instalacion.html" class="btn btn-primary">
+                            Siguiente Tema: 02 - Instalación →
+                        </a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="developer-info">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
+                <div class="developer-contact">
+                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
+                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
+                </div>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../js/main.js"></script>
+</body>
+</html>

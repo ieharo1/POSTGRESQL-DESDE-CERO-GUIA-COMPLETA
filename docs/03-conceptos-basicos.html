@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>03 - Conceptos Básicos | PostgreSQL desde Cero</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/docs.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="container">
+                <div class="logo"><span class="logo-icon">🐘</span><span class="logo-text">PostgreSQL desde Cero</span></div>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="../index.html">Inicio</a></li>
+                    <li><a href="../index.html#que-es">¿Qué es?</a></li>
+                    <li><a href="../index.html#arquitectura">Arquitectura</a></li>
+                    <li><a href="../index.html#temas">Temas</a></li>
+                    <li><a href="../index.html#ejemplos">Ejemplos</a></li>
+                </ul>
+                <button class="nav-toggle" id="navToggle"><span></span><span></span><span></span></button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="docs-main">
+        <div class="docs-container">
+            <aside class="docs-sidebar">
+                <h3>Contenido del Curso</h3>
+                <nav class="docs-nav"><ul>
+                    <li><a href="01-introduccion.html">01 - Introducción</a></li>
+                    <li><a href="02-instalacion.html">02 - Instalación</a></li>
+                    <li><a href="03-conceptos-basicos.html" class="active">03 - Conceptos Básicos</a></li>
+                    <li><a href="04-ejemplos-practicos.html">04 - Ejemplos Prácticos</a></li>
+                    <li><a href="05-buenas-practicas.html">05 - Buenas Prácticas</a></li>
+                    <li><a href="06-casos-reales.html">06 - Casos Reales</a></li>
+                    <li><a href="07-proyecto-final.html">07 - Proyecto Final</a></li>
+                </ul></nav>
+            </aside>
+
+            <article class="docs-content">
+                <header class="docs-header">
+                    <h1>Tema 03: Conceptos Básicos de PostgreSQL</h1>
+                    <p class="docs-intro">Aprende los fundamentos esenciales: bases de datos, tablas, tipos de datos, restricciones y operaciones CRUD.</p>
+                </header>
+
+                <section class="docs-section">
+                    <h2>3.1 Creación de Bases de Datos</h2>
+                    
+                    <h3>Sintaxis Básica</h3>
+                    <pre><code class="language-sql">-- Crear una base de datos simple
+CREATE DATABASE nombre_base_datos;
+
+-- Crear con opciones específicas
+CREATE DATABASE mi_empresa
+    WITH 
+    ENCODING = 'UTF8'
+    LC_COLLATE = 'es_ES.UTF-8'
+    LC_CTYPE = 'es_ES.UTF-8'
+    TEMPLATE = template0
+    OWNER = postgres;
+
+-- Ver bases de datos existentes
+\l
+
+-- Conectarse a una base de datos
+\c nombre_base_datos;
+
+-- Eliminar base de datos
+DROP DATABASE IF EXISTS nombre_base_datos;</code></pre>
+
+                    <h3>Opciones de CREATE DATABASE</h3>
+                    <table class="docs-table">
+                        <thead><tr><th>Opción</th><th>Descripción</th><th>Ejemplo</th></tr></thead>
+                        <tbody>
+                            <tr><td>ENCODING</td><td>Codificación de caracteres</td><td>UTF8, LATIN1</td></tr>
+                            <tr><td>LC_COLLATE</td><td>Reglas de ordenamiento</td><td>es_ES.UTF-8</td></tr>
+                            <tr><td>LC_CTYPE</td><td>Clasificación de caracteres</td><td>es_ES.UTF-8</td></tr>
+                            <tr><td>TEMPLATE</td><td>Base de datos plantilla</td><td>template0, template1</td></tr>
+                            <tr><td>OWNER</td><td>Usuario propietario</td><td>postgres, mi_usuario</td></tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.2 Tipos de Datos en PostgreSQL</h2>
+                    
+                    <h3>Tipos Numéricos</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_numericos (
+    id SERIAL PRIMARY KEY,
+    entero_pequeno SMALLINT,      -- -32768 a +32767
+    entero_normal INTEGER,         -- -2B a +2B
+    entero_grande BIGINT,          -- -9M a +9M
+    decimal_exacto DECIMAL(10,2),  -- Exacto, 10 dígitos, 2 decimales
+    punto_flotante REAL,           -- 6 dígitos precisión
+    doble_precision DOUBLE PRECISION, -- 15 dígitos
+    dinero MONEY                   -- Formato monetario
+);
+
+-- Ejemplos de inserción
+INSERT INTO tipos_numericos VALUES
+(1, 100, 50000, 1000000, 99999999.99, 3.14, 3.14159265358979, 1500.50);</code></pre>
+
+                    <h3>Tipos de Caracteres</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_texto (
+    id SERIAL PRIMARY KEY,
+    texto_longitud_fija CHAR(50),      -- Siempre 50 caracteres (rellena con espacios)
+    texto_longitud_variable VARCHAR(255), -- Hasta 255 caracteres
+    texto_ilimitado TEXT,               -- Sin límite práctico
+    nombre_nombre NAME                  -- Para nombres de objetos (63 bytes)
+);
+
+-- TEXT es el más recomendado en PostgreSQL
+-- VARCHAR(n) y TEXT tienen el mismo rendimiento</code></pre>
+
+                    <h3>Tipos de Fecha y Hora</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_fecha (
+    id SERIAL PRIMARY KEY,
+    solo_fecha DATE,                    -- YYYY-MM-DD
+    solo_hora TIME,                     -- HH:MM:SS
+    hora_con_zona TIME WITH TIME ZONE,  -- HH:MM:SS+TZ
+    fecha_hora TIMESTAMP,               -- YYYY-MM-DD HH:MM:SS
+    fecha_hora_zona TIMESTAMP WITH TIME ZONE, -- Con zona horaria
+    intervalo INTERVAL                  -- Período de tiempo
+);
+
+-- Ejemplos
+INSERT INTO tipos_fecha VALUES
+(1, 
+    '2024-01-15', 
+    '14:30:00', 
+    '14:30:00-05',
+    '2024-01-15 14:30:00',
+    '2024-01-15 14:30:00-05',
+    INTERVAL '1 day 2 hours 30 minutes'
+);
+
+-- NOW() devuelve fecha y hora actual
+SELECT NOW();
+SELECT CURRENT_DATE;
+SELECT CURRENT_TIME;</code></pre>
+
+                    <h3>Tipos Booleanos</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_booleanos (
+    id SERIAL PRIMARY KEY,
+    activo BOOLEAN,
+    verificado BOOL  -- BOOL es alias de BOOLEAN
+);
+
+-- Valores válidos: TRUE, FALSE, NULL
+-- También acepta: 't', 'f', 'true', 'false', 'y', 'n', 'yes', 'no', '1', '0'
+INSERT INTO tipos_booleanos VALUES
+(1, TRUE, 't'),
+(2, FALSE, 'no'),
+(3, NULL, NULL);</code></pre>
+
+                    <h3>Tipos JSON</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_json (
+    id SERIAL PRIMARY KEY,
+    json_basico JSON,      -- JSON como texto
+    json_binario JSONB     -- JSON binario (más eficiente para consultas)
+);
+
+-- JSONB es recomendado para producción
+INSERT INTO tipos_json VALUES
+(1, 
+    '{"nombre": "Juan", "edad": 30, "ciudad": "Madrid"}',
+    '{"nombre": "Juan", "edad": 30, "ciudad": "Madrid"}'
+);
+
+-- Consultar datos JSON
+SELECT json_basico->>'nombre' as nombre FROM tipos_json;
+SELECT * FROM tipos_json WHERE jsonb_binario->>'edad' = '30';</code></pre>
+
+                    <h3>Tipos Especiales</h3>
+                    <pre><code class="language-sql">CREATE TABLE tipos_especiales (
+    id SERIAL PRIMARY KEY,
+    uuid UUID DEFAULT gen_random_uuid(),     -- Identificador único universal
+    ip INET,                                  -- Dirección IPv4 o IPv6
+    mac MACADDR,                              -- Dirección MAC
+    rango_int INT4RANGE,                      -- Rango de enteros
+    rango_fecha DATERANGE,                    -- Rango de fechas
+    array_texto TEXT[],                       -- Array de texto
+    array_numeros INTEGER[]                   -- Array de números
+);
+
+-- Ejemplo con arrays
+INSERT INTO tipos_especiales (ip, array_texto, array_numeros) VALUES
+('192.168.1.1', ARRAY['a', 'b', 'c'], ARRAY[1, 2, 3, 4, 5]);
+
+-- Ejemplo con UUID
+INSERT INTO tipos_especiales DEFAULT VALUES;
+SELECT uuid FROM tipos_especiales;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.3 Creación de Tablas</h2>
+                    
+                    <h3>Sintaxis Completa</h3>
+                    <pre><code class="language-sql">CREATE TABLE empleados (
+    -- Columna con autoincremento
+    empleado_id SERIAL PRIMARY KEY,
+    
+    -- Columnas con restricciones
+    nombre VARCHAR(100) NOT NULL,
+    apellido VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    telefono VARCHAR(20),
+    
+    -- Fecha con valor por defecto
+    fecha_contratacion DATE DEFAULT CURRENT_DATE,
+    
+    -- Salario con validación
+    salario DECIMAL(10,2) CHECK (salario >= 0),
+    
+    -- Departamento como clave foránea
+    departamento_id INTEGER,
+    
+    -- Timestamp de creación
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Clave foránea
+    FOREIGN KEY (departamento_id) REFERENCES departamentos(departamento_id)
+);</code></pre>
+
+                    <h3>Crear Tabla desde Otra Tabla</h3>
+                    <pre><code class="language-sql">-- Copiar estructura y datos
+CREATE TABLE empleados_backup AS 
+SELECT * FROM empleados;
+
+-- Copiar solo estructura
+CREATE TABLE empleados_estructura AS 
+SELECT * FROM empleados WHERE 1 = 0;
+
+-- Copiar columnas específicas
+CREATE TABLE empleados_resumen AS
+SELECT empleado_id, nombre, apellido, email FROM empleados;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.4 Restricciones (Constraints)</h2>
+                    
+                    <h3>Tipos de Restricciones</h3>
+                    <pre><code class="language-sql">CREATE TABLE productos (
+    producto_id SERIAL PRIMARY KEY,                    -- Clave primaria
+    nombre VARCHAR(100) NOT NULL,                       -- No nulo
+    sku VARCHAR(50) UNIQUE NOT NULL,                    -- Único
+    precio DECIMAL(10,2) CHECK (precio > 0),           -- Validación
+    categoria_id INTEGER REFERENCES categorias(id),    -- Clave foránea
+    stock INTEGER DEFAULT 0 CHECK (stock >= 0),        -- Default + Check
+    activo BOOLEAN DEFAULT TRUE,                        -- Valor por defecto
+    CONSTRAINT precio_stock_check CHECK (precio > 0 AND stock >= 0)  -- Check múltiple
+);</code></pre>
+
+                    <h3>Agregar/Eliminar Restricciones</h3>
+                    <pre><code class="language-sql">-- Agregar NOT NULL
+ALTER TABLE productos ALTER COLUMN nombre SET NOT NULL;
+
+-- Agregar UNIQUE
+ALTER TABLE productos ADD CONSTRAINT unique_sku UNIQUE (sku);
+
+-- Agregar CHECK
+ALTER TABLE productos ADD CONSTRAINT precio_positivo CHECK (precio > 0);
+
+-- Agregar FOREIGN KEY
+ALTER TABLE ordenes 
+ADD CONSTRAINT fk_producto 
+FOREIGN KEY (producto_id) REFERENCES productos(producto_id);
+
+-- Eliminar restricción
+ALTER TABLE productos DROP CONSTRAINT precio_positivo;
+
+-- Eliminar NOT NULL
+ALTER TABLE productos ALTER COLUMN telefono DROP NOT NULL;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.5 Operaciones CRUD</h2>
+                    
+                    <h3>CREATE - Insertar Datos</h3>
+                    <pre><code class="language-sql">-- Insertar una fila
+INSERT INTO empleados (nombre, apellido, email, salario)
+VALUES ('Juan', 'Pérez', 'juan@email.com', 50000);
+
+-- Insertar múltiples filas
+INSERT INTO empleados (nombre, apellido, email, salario) VALUES
+('María', 'García', 'maria@email.com', 55000),
+('Carlos', 'López', 'carlos@email.com', 48000),
+('Ana', 'Martínez', 'ana@email.com', 52000);
+
+-- Insertar y devolver valores
+INSERT INTO empleados (nombre, apellido, email, salario)
+VALUES ('Pedro', 'Sánchez', 'pedro@email.com', 60000)
+RETURNING empleado_id, nombre, email;
+
+-- Insertar desde otra tabla
+INSERT INTO empleados_backup
+SELECT * FROM empleados WHERE fecha_contratacion >= '2024-01-01';</code></pre>
+
+                    <h3>READ - Consultar Datos</h3>
+                    <pre><code class="language-sql">-- Consulta básica
+SELECT * FROM empleados;
+
+-- Columnas específicas
+SELECT nombre, apellido, email FROM empleados;
+
+-- Con alias
+SELECT 
+    nombre AS "Nombre Completo",
+    email AS "Correo Electrónico",
+    salario AS "Salario Anual"
+FROM empleados;
+
+-- DISTINCT - Valores únicos
+SELECT DISTINCT departamento_id FROM empleados;
+
+-- Con WHERE
+SELECT * FROM empleados WHERE salario > 50000;
+
+-- Múltiples condiciones
+SELECT * FROM empleados 
+WHERE salario > 50000 AND departamento_id = 1;
+
+-- LIKE - Búsqueda de patrones
+SELECT * FROM empleados WHERE nombre LIKE 'J%';  -- Empieza con J
+SELECT * FROM empleados WHERE email LIKE '%@gmail.com';
+
+-- ORDER BY
+SELECT * FROM empleados ORDER BY salario DESC;
+
+-- LIMIT y OFFSET
+SELECT * FROM empleados ORDER BY salario DESC LIMIT 10 OFFSET 0;
+
+-- Funciones de agregación
+SELECT 
+    COUNT(*) as total_empleados,
+    AVG(salario) as salario_promedio,
+    MAX(salario) as salario_maximo,
+    MIN(salario) as salario_minimo,
+    SUM(salario) as total_nomina
+FROM empleados;
+
+-- GROUP BY
+SELECT departamento_id, COUNT(*) as cantidad, AVG(salario) as promedio
+FROM empleados
+GROUP BY departamento_id;
+
+-- HAVING - Filtrar grupos
+SELECT departamento_id, AVG(salario) as promedio
+FROM empleados
+GROUP BY departamento_id
+HAVING AVG(salario) > 50000;</code></pre>
+
+                    <h3>UPDATE - Actualizar Datos</h3>
+                    <pre><code class="language-sql">-- Actualizar una fila
+UPDATE empleados 
+SET salario = 55000 
+WHERE empleado_id = 1;
+
+-- Actualizar múltiples columnas
+UPDATE empleados 
+SET salario = 60000, departamento_id = 2
+WHERE empleado_id = 1;
+
+-- Actualizar múltiples filas
+UPDATE empleados 
+SET salario = salario * 1.1  -- Aumento del 10%
+WHERE departamento_id = 1;
+
+-- Actualizar y devolver valores
+UPDATE empleados 
+SET salario = 65000 
+WHERE empleado_id = 1
+RETURNING *;
+
+-- Actualizar con subconsulta
+UPDATE empleados 
+SET salario = (SELECT AVG(salario) FROM empleados)
+WHERE empleado_id = 1;</code></pre>
+
+                    <h3>DELETE - Eliminar Datos</h3>
+                    <pre><code class="language-sql">-- Eliminar una fila
+DELETE FROM empleados WHERE empleado_id = 1;
+
+-- Eliminar múltiples filas
+DELETE FROM empleados WHERE departamento_id = 5;
+
+-- Eliminar y devolver valores
+DELETE FROM empleados 
+WHERE fecha_contratacion < '2020-01-01'
+RETURNING *;
+
+-- TRUNCATE - Eliminar todos los datos (más rápido)
+TRUNCATE TABLE empleados;
+
+-- TRUNCATE con reinicio de secuencia
+TRUNCATE TABLE empleados RESTART IDENTITY;</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.6 Comandos psql Esenciales</h2>
+                    
+                    <pre><code class="language-sql">-- Conectar a base de datos
+\c nombre_base_datos
+
+-- Listar bases de datos
+\l
+
+-- Listar tablas
+\dt
+
+-- Ver estructura de tabla
+\d nombre_tabla
+
+-- Ver todas las tablas con detalles
+\d+
+
+-- Listar esquemas
+\dn
+
+-- Listar usuarios
+\du
+
+-- Ver consultas recientes
+\s
+
+-- Mostrar historial de comandos
+\s /ruta/archivo.sql
+
+-- Ejecutar archivo SQL
+\i /ruta/archivo.sql
+
+-- Guardar salida en archivo
+\o /ruta/salida.txt
+SELECT * FROM empleados;
+\o
+
+-- Mostrar tiempo de ejecución
+\timing
+
+-- Ayuda sobre comandos SQL
+\h SELECT
+\h CREATE TABLE
+
+-- Ayuda sobre comandos psql
+\?
+
+-- Limpiar pantalla
+\! clear  -- Linux/Mac
+\! cls    -- Windows
+
+-- Salir
+\q</code></pre>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.7 Ejercicios Prácticos</h2>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 1: Crear Base de Datos de Biblioteca</h4>
+                        <pre><code class="language-sql">-- 1. Crea una base de datos llamada "biblioteca"
+-- 2. Crea las siguientes tablas:
+
+-- Tabla: autores
+-- - autor_id (SERIAL PRIMARY KEY)
+-- - nombre (VARCHAR(100) NOT NULL)
+-- - nacionalidad (VARCHAR(50))
+-- - fecha_nacimiento (DATE)
+
+-- Tabla: libros
+-- - libro_id (SERIAL PRIMARY KEY)
+-- - titulo (VARCHAR(200) NOT NULL)
+-- - isbn (VARCHAR(13) UNIQUE)
+-- - año_publicacion (INTEGER)
+-- - autor_id (INTEGER REFERENCES autores)
+-- - precio (DECIMAL(10,2) CHECK (precio > 0))
+
+-- 3. Inserta al menos 3 autores y 5 libros
+-- 4. Consulta todos los libros con sus autores</code></pre>
+                    </div>
+                    
+                    <div class="exercise-box">
+                        <h4>📝 Ejercicio 2: Sistema de Ventas</h4>
+                        <pre><code class="language-sql">-- Crea un sistema completo con:
+
+-- 1. Tabla "clientes"
+-- 2. Tabla "productos"
+-- 3. Tabla "ordenes"
+-- 4. Tabla "detalle_ordenes"
+
+-- Luego realiza:
+-- a) Inserta 5 clientes
+-- b) Inserta 10 productos
+-- c) Crea 3 órdenes con múltiples productos cada una
+-- d) Consulta el total vendido por cliente
+-- e) Consulta los 3 productos más vendidos</code></pre>
+                    </div>
+                </section>
+
+                <section class="docs-section">
+                    <h2>3.8 Resumen del Tema</h2>
+                    <div class="summary-box">
+                        <h3>Puntos Clave</h3>
+                        <ul>
+                            <li>PostgreSQL soporta una amplia variedad de tipos de datos incluyendo JSONB y arrays</li>
+                            <li>Las restricciones (constraints) aseguran la integridad de los datos</li>
+                            <li>CRUD son las operaciones básicas: Create, Read, Update, Delete</li>
+                            <li>psql tiene comandos especiales que comienzan con \</li>
+                            <li>RETURNING permite obtener valores después de INSERT/UPDATE/DELETE</li>
+                        </ul>
+                    </div>
+                    <div class="next-topic">
+                        <a href="04-ejemplos-practicos.html" class="btn btn-primary">Siguiente Tema: 04 - Ejemplos Prácticos →</a>
+                    </div>
+                </section>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom">
+                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
+                <p class="developer-info">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
+                <div class="developer-contact">
+                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
+                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
+                </div>
+                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    <script src="../js/main.js"></script>
+</body>
+</html>
