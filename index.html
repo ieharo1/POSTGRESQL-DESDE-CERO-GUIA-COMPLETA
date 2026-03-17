@@ -142,43 +142,195 @@
                     <div class="topic-number">01</div>
                     <h3>Introducción</h3>
                     <p>Conceptos básicos de PostgreSQL, instalación y configuración inicial del entorno.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema1-1" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="2">
                     <div class="topic-number">02</div>
                     <h3>Instalación</h3>
                     <p>Guía paso a paso para instalar PostgreSQL en Windows, Linux y macOS.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema1-2" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="3">
                     <div class="topic-number">03</div>
                     <h3>Conceptos básicos</h3>
                     <p>Creación de bases de datos, tablas, tipos de datos y restricciones.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema1-3" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="4">
                     <div class="topic-number">04</div>
                     <h3>Ejemplos prácticos</h3>
                     <p>Consultas SELECT, JOINs, subconsultas y funciones de agregación.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema2-1" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="5">
                     <div class="topic-number">05</div>
                     <h3>Buenas prácticas</h3>
                     <p>Indexación, optimización de consultas y diseño de esquemas eficientes.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema2-2" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="6">
                     <div class="topic-number">06</div>
                     <h3>Casos reales</h3>
                     <p>Ejemplos de implementación en producción y patrones de diseño comunes.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema3-1" class="topic-link">Ver tema →</a>
                 </div>
                 <div class="topic-card" data-topic="7">
                     <div class="topic-number">07</div>
                     <h3>Proyecto final</h3>
                     <p>Desarrollo de una base de datos completa para una aplicación real.</p>
-                    <a href="#" class="topic-link">Ver tema →</a>
+                    <a href="#tema3-2" class="topic-link">Ver tema →</a>
+                </div>
+            </div>
+
+            <!-- Contenido Detallado de Temas -->
+            <div class="topic-content-container">
+                <div class="content-detail" id="tema1-1">
+                    <h3>🐘 Introducción a PostgreSQL</h3>
+                    <div class="content-body">
+                        <p><strong>PostgreSQL</strong> es un sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, confiabilidad y cumplimiento de estándares SQL.</p>
+                        <h4>Historia:</h4>
+                        <p>PostgreSQL es considerado el RDBMS de código abierto más avanzado del mundo. Su nombre proviene de "Post-Ingres", siendo Ingres un sistema de bases de datos desarrollado en UC Berkeley en los años 60-70.</p>
+                        <h4>Características Principales:</h4>
+                        <ul>
+                            <li><strong>ACID:</strong> Transacciones completamente ACID compliant</li>
+                            <li><strong>JSON:</strong> Soporte nativo para documentos JSON</li>
+                            <li><strong>Extensiones:</strong> Sistema de extensiones personalizables</li>
+                            <li><strong>GIS:</strong> PostGIS para datos geoespaciales</li>
+                        </ul>
+                        <div class="info-box">
+                            <strong>💡 ¿Sabías qué?</strong>
+                            <p>PostgreSQL es usado por empresas como Apple, Instagram y Spotify para manejar datos críticos.</p>
+                        </div>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema1-2">
+                    <h3>🔧 Instalación de PostgreSQL</h3>
+                    <div class="content-body">
+                        <h4>En Windows:</h4>
+                        <ol>
+                            <li>Descarga desde postgresql.org</li>
+                            <li>Ejecuta el instalador</li>
+                            <li>Configura la contraseña de postgres</li>
+                            <li>Instala pgAdmin (GUI)</li>
+                        </ol>
+                        <h4>En Linux (Ubuntu):</h4>
+                        <pre><code>sudo apt update
+sudo apt install postgresql postgresql-contrib
+sudo systemctl start postgresql</code></pre>
+                        <h4>En macOS:</h4>
+                        <pre><code>brew install postgresql
+brew services start postgresql</code></pre>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema1-3">
+                    <h3>📦 Conceptos Básicos</h3>
+                    <div class="content-body">
+                        <h4>Crear Base de Datos:</h4>
+                        <pre><code>CREATE DATABASE mi_base_datos;
+\c mi_base_datos;</code></pre>
+                        <h4>Crear Tabla:</h4>
+                        <pre><code>CREATE TABLE usuarios (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);</code></pre>
+                        <h4>Tipos de Datos:</h4>
+                        <ul>
+                            <li><strong>SERIAL:</strong> Autoincremental</li>
+                            <li><strong>VARCHAR(n):</strong> Texto de longitud variable</li>
+                            <li><strong>TEXT:</strong> Texto ilimitado</li>
+                            <li><strong>TIMESTAMP:</strong> Fecha y hora</li>
+                        </ul>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema2-1">
+                    <h3>💻 Consultas SQL</h3>
+                    <div class="content-body">
+                        <h4>SELECT Básico:</h4>
+                        <pre><code>SELECT * FROM usuarios;
+SELECT nombre, email FROM usuarios WHERE id = 1;
+SELECT COUNT(*) FROM usuarios;</code></pre>
+                        <h4>JOINs:</h4>
+                        <pre><code>-- INNER JOIN
+SELECT u.nombre, p.titulo
+FROM usuarios u
+INNER JOIN posts p ON u.id = p.usuario_id;
+
+-- LEFT JOIN
+SELECT u.nombre, p.titulo
+FROM usuarios u
+LEFT JOIN posts p ON u.id = p.usuario_id;</code></pre>
+                        <h4>Funciones de Agregación:</h4>
+                        <pre><code>SELECT AVG(precio), MAX(precio), MIN(precio)
+FROM productos;</code></pre>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema2-2">
+                    <h3>✅ Buenas Prácticas</h3>
+                    <div class="content-body">
+                        <h4>Índices:</h4>
+                        <pre><code>-- Crear índice
+CREATE INDEX idx_email ON usuarios(email);
+
+-- Índice único
+CREATE UNIQUE INDEX idx_usuario_email ON usuarios(email);</code></pre>
+                        <h4>Vistas Materializadas:</h4>
+                        <pre><code>CREATE VIEW vista_usuarios AS
+SELECT u.nombre, COUNT(p.id) as posts
+FROM usuarios u
+LEFT JOIN posts p ON u.id = p.usuario_id
+GROUP BY u.id;</code></pre>
+                        <h4>EXPLAIN:</h4>
+                        <pre><code>EXPLAIN ANALYZE SELECT * FROM usuarios WHERE email = 'test@email.com';</code></pre>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema3-1">
+                    <h3>🚀 Casos Reales</h3>
+                    <div class="content-body">
+                        <h4>Full-Text Search:</h4>
+                        <pre><code>SELECT * FROM posts
+WHERE to_tsvector('spanish', contenido) @@ to_tsquery('palabra');</code></pre>
+                        <h4>JSONB:</h4>
+                        <pre><code>CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    atributos JSONB
+);</code></pre>
+                        <h4>Backup:</h4>
+                        <pre><code>pg_dump -U postgres mi_base > backup.sql
+psql -U postgres -d mi_base < backup.sql</code></pre>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                </div>
+
+                <div class="content-detail" id="tema3-2">
+                    <h3>📋 Proyecto Final</h3>
+                    <div class="content-body">
+                        <p>Desarrolla una base de datos completa:</p>
+                        <ol>
+                            <li>Diseñar modelo entidad-relación</li>
+                            <li>Crear tablas con restricciones</li>
+                            <li>Implementar triggers y funciones</li>
+                            <li>Configurar índices estratégicos</li>
+                            <li>Crear vistas para reportes</li>
+                            <li>Implementar backup automático</li>
+                        </ol>
+                        <div class="info-box">
+                            <strong>💡 Proyecto sugerido:</strong>
+                            <p>Crea una base de datos para red social con usuarios, posts, comentarios y likes.</p>
+                        </div>
+                    </div>
+                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
                 </div>
             </div>
         </div>
