@@ -3,262 +3,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PostgreSQL desde Cero - Guía Completa</title>
+    <title>🐘 PostgreSQL Desde Cero - Guía Completa</title>
     <link rel="stylesheet" href="css/styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <nav class="navbar">
             <div class="container">
-                <div class="logo">
-                    <span class="logo-icon">🐘</span>
-                    <span class="logo-text">PostgreSQL desde Cero</span>
-                </div>
-                <ul class="nav-menu" id="navMenu">
-                    <li><a href="#inicio">Inicio</a></li>
-                    <li><a href="#que-es">¿Qué es?</a></li>
-                    <li><a href="#arquitectura">Arquitectura</a></li>
-                    <li><a href="#temas">Temas</a></li>
-                    <li><a href="#ejemplos">Ejemplos</a></li>
+                <a href="#" class="logo">🐘 PostgreSQL Desde Cero</a>
+                <ul class="nav-menu">
+                    <li><a href="#inicio">🏠 Inicio</a></li>
+                    <li><a href="#que-es">📖 ¿Qué es?</a></li>
+                    <li><a href="#temas">📚 Temas</a></li>
+                    <li><a href="#ejemplos">💻 Ejemplos</a></li>
+                    <li><a href="#contacto">👨‍💻 Contacto</a></li>
                 </ul>
-                <button class="nav-toggle" id="navToggle">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                </button>
             </div>
         </nav>
     </header>
 
-    <!-- Hero Section -->
-    <section id="inicio" class="hero">
-        <div class="container">
-            <h1>PostgreSQL desde Cero</h1>
-            <p class="hero-subtitle">Guía completa para aprender PostgreSQL desde fundamentos hasta conceptos avanzados.</p>
-            <div class="hero-buttons">
-                <a href="#que-es" class="btn btn-primary">Comenzar</a>
-                <a href="#ejemplos" class="btn btn-secondary">Ver ejemplos</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- ¿Qué es PostgreSQL? -->
-    <section id="que-es" class="section">
-        <div class="container">
-            <h2>¿Qué es PostgreSQL?</h2>
-            <div class="content-grid">
-                <div class="content-card">
-                    <div class="card-icon">🗄️</div>
-                    <h3>Sistema de Gestión de Bases de Datos</h3>
-                    <p>PostgreSQL es un sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, confiabilidad y cumplimiento de estándares SQL.</p>
-                </div>
-                <div class="content-card">
-                    <div class="card-icon">⚡</div>
-                    <h3>Para Qué Sirve</h3>
-                    <p>Se utiliza para almacenar, organizar y recuperar datos en aplicaciones web, sistemas empresariales, análisis de datos y aplicaciones de misión crítica.</p>
-                </div>
-                <div class="content-card">
-                    <div class="card-icon">🔧</div>
-                    <h3>Características Principales</h3>
-                    <p>Soporta JSON, índices avanzados, transacciones ACID, stored procedures, triggers, vistas materializadas y extensiones personalizables.</p>
+    <main>
+        <section id="inicio" class="hero">
+            <div class="container">
+                <h1>🐘 PostgreSQL Desde Cero</h1>
+                <p class="hero-subtitle">Guía completa para aprender PostgreSQL desde fundamentos hasta conceptos avanzados.</p>
+                <div class="hero-buttons">
+                    <a href="#temas" class="btn btn-primary">Comenzar Curso</a>
+                    <a href="#ejemplos" class="btn btn-secondary">Ver Ejemplos</a>
                 </div>
             </div>
+        </section>
 
-            <div class="info-box">
-                <h4>💡 ¿Sabías qué?</h4>
-                <p>PostgreSQL es considerado el RDBMS de código abierto más avanzado del mundo. Su nombre proviene de "Post-Ingres", siendo Ingres un sistema de bases de datos desarrollado en UC Berkeley en los años 60-70.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Arquitectura -->
-    <section id="arquitectura" class="section section-alt">
-        <div class="container">
-            <h2>Arquitectura de PostgreSQL</h2>
-            <p class="section-intro">PostgreSQL utiliza una arquitectura cliente-servidor con procesos múltiples para manejar conexiones y operaciones.</p>
-
-            <div class="architecture-diagram">
-                <div class="arch-layer">
-                    <h4>Cliente / Aplicación</h4>
-                    <p>psql, pgAdmin, aplicaciones, drivers</p>
-                </div>
-                <div class="arch-arrow">⬇️</div>
-                <div class="arch-layer">
-                    <h4>Postmaster</h4>
-                    <p>Proceso principal que gestiona el cluster</p>
-                </div>
-                <div class="arch-arrow">⬇️</div>
-                <div class="arch-layer">
-                    <h4>Backend Processes</h4>
-                    <p>Procesos por conexión (query executor)</p>
-                </div>
-                <div class="arch-arrow">⬇️</div>
-                <div class="arch-layer">
-                    <h4>Storage Engine</h4>
-                    <p>Tablas, índices, WAL, buffer cache</p>
+        <section id="que-es" class="section">
+            <div class="container">
+                <h2>📖 ¿Qué es PostgreSQL?</h2>
+                <div class="content-grid">
+                    <div class="content-card">
+                        <div class="card-icon">🗄️</div>
+                        <h3>Base de Datos Relacional</h3>
+                        <p>PostgreSQL es un sistema de gestión de bases de datos relacional y de objetos, conocido por su estabilidad y características avanzadas.</p>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-icon">⚡</div>
+                        <h3>Para Qué Sirve</h3>
+                        <p>Almacenar, gestionar y consultar datos estructurados para aplicaciones web, empresariales y de análisis de datos.</p>
+                    </div>
+                    <div class="content-card">
+                        <div class="card-icon">🔧</div>
+                        <h3>Características</h3>
+                        <p>ACID compliance, transacciones, triggers, vistas, stored procedures, JSON, full-text search y más.</p>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <div class="components-grid">
-                <div class="component-card">
-                    <h4>📊 Procesos Background</h4>
-                    <ul>
-                        <li>Checkpointer - Guarda cambios en disco</li>
-                        <li>WAL Writer - Escribe el log transaccional</li>
-                        <li>Autovacuum - Limpieza automática</li>
-                        <li>Stats Collector - Recopila estadísticas</li>
-                    </ul>
+        <section id="temas" class="section">
+            <div class="container">
+                <h2>📚 Contenido del Curso</h2>
+                <div class="topics-grid">
+                    <div class="topic-card">
+                        <div class="topic-number">01</div>
+                        <div class="topic-icon">📌</div>
+                        <h3>Introducción</h3>
+                        <p>Conceptos básicos de PostgreSQL, instalación y configuración inicial del entorno.</p>
+                        <a href="#tema1-1" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">02</div>
+                        <div class="topic-icon">⚙️</div>
+                        <h3>Instalación</h3>
+                        <p>Guía paso a paso para instalar PostgreSQL en Windows, Linux y macOS.</p>
+                        <a href="#tema1-2" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">03</div>
+                        <div class="topic-icon">📦</div>
+                        <h3>Conceptos básicos</h3>
+                        <p>Creación de bases de datos, tablas, tipos de datos y restricciones.</p>
+                        <a href="#tema1-3" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">04</div>
+                        <div class="topic-icon">💻</div>
+                        <h3>Ejemplos prácticos</h3>
+                        <p>Consultas SELECT, JOINs, subconsultas y funciones de agregación.</p>
+                        <a href="#tema2-1" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">05</div>
+                        <div class="topic-icon">✅</div>
+                        <h3>Buenas prácticas</h3>
+                        <p>Indexación, optimización de consultas y diseño de esquemas eficientes.</p>
+                        <a href="#tema2-2" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">06</div>
+                        <div class="topic-icon">🚀</div>
+                        <h3>Casos reales</h3>
+                        <p>Ejemplos de implementación en producción y patrones de diseño comunes.</p>
+                        <a href="#tema3-1" class="topic-link">Ver tema →</a>
+                    </div>
+                    <div class="topic-card">
+                        <div class="topic-number">07</div>
+                        <div class="topic-icon">📋</div>
+                        <h3>Proyecto final</h3>
+                        <p>Desarrollo de una base de datos completa para una aplicación real.</p>
+                        <a href="#tema3-2" class="topic-link">Ver tema →</a>
+                    </div>
                 </div>
-                <div class="component-card">
-                    <h4>💾 Almacenamiento</h4>
-                    <ul>
-                        <li>Tablespaces - Ubicación física de datos</li>
-                        <li>WAL (Write-Ahead Log) - Durabilidad</li>
-                        <li>Shared Buffers - Caché en memoria</li>
-                        <li>Temp Files - Archivos temporales</li>
-                    </ul>
-                </div>
-                <div class="component-card">
-                    <h4>🔒 Concurrencia</h4>
-                    <ul>
-                        <li>MVCC - Control de concurrencia multiversión</li>
-                        <li>Row-level locking - Bloqueo por fila</li>
-                        <li>Transaction isolation - Aislamiento de transacciones</li>
-                        <li>Savepoints - Puntos de guardado</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Temas -->
-    <section id="temas" class="section">
-        <div class="container">
-            <h2>Contenido del Curso</h2>
-            <div class="topics-grid">
-                <div class="topic-card" data-topic="1">
-                    <div class="topic-number">01</div>
-                    <h3>Introducción</h3>
-                    <p>Conceptos básicos de PostgreSQL, instalación y configuración inicial del entorno.</p>
-                    <a href="#tema1-1" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="2">
-                    <div class="topic-number">02</div>
-                    <h3>Instalación</h3>
-                    <p>Guía paso a paso para instalar PostgreSQL en Windows, Linux y macOS.</p>
-                    <a href="#tema1-2" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="3">
-                    <div class="topic-number">03</div>
-                    <h3>Conceptos básicos</h3>
-                    <p>Creación de bases de datos, tablas, tipos de datos y restricciones.</p>
-                    <a href="#tema1-3" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="4">
-                    <div class="topic-number">04</div>
-                    <h3>Ejemplos prácticos</h3>
-                    <p>Consultas SELECT, JOINs, subconsultas y funciones de agregación.</p>
-                    <a href="#tema2-1" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="5">
-                    <div class="topic-number">05</div>
-                    <h3>Buenas prácticas</h3>
-                    <p>Indexación, optimización de consultas y diseño de esquemas eficientes.</p>
-                    <a href="#tema2-2" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="6">
-                    <div class="topic-number">06</div>
-                    <h3>Casos reales</h3>
-                    <p>Ejemplos de implementación en producción y patrones de diseño comunes.</p>
-                    <a href="#tema3-1" class="topic-link">Ver tema →</a>
-                </div>
-                <div class="topic-card" data-topic="7">
-                    <div class="topic-number">07</div>
-                    <h3>Proyecto final</h3>
-                    <p>Desarrollo de una base de datos completa para una aplicación real.</p>
-                    <a href="#tema3-2" class="topic-link">Ver tema →</a>
-                </div>
-            </div>
-
-            <!-- Contenido Detallado de Temas -->
-            <div class="topic-content-container">
-                <div class="content-detail" id="tema1-1">
-                    <h3>🐘 Introducción a PostgreSQL</h3>
-                    <div class="content-body">
-                        <p><strong>PostgreSQL</strong> es un sistema de gestión de bases de datos relacional de código abierto, conocido por su robustez, confiabilidad y cumplimiento de estándares SQL.</p>
-                        <h4>Historia:</h4>
-                        <p>PostgreSQL es considerado el RDBMS de código abierto más avanzado del mundo. Su nombre proviene de "Post-Ingres", siendo Ingres un sistema de bases de datos desarrollado en UC Berkeley en los años 60-70.</p>
-                        <h4>Características Principales:</h4>
-                        <ul>
-                            <li><strong>ACID:</strong> Transacciones completamente ACID compliant</li>
-                            <li><strong>JSON:</strong> Soporte nativo para documentos JSON</li>
-                            <li><strong>Extensiones:</strong> Sistema de extensiones personalizables</li>
-                            <li><strong>GIS:</strong> PostGIS para datos geoespaciales</li>
-                        </ul>
-                        <div class="info-box">
-                            <strong>💡 ¿Sabías qué?</strong>
-                            <p>PostgreSQL es usado por empresas como Apple, Instagram y Spotify para manejar datos críticos.</p>
+                
+                <!-- Contenido Detallado de Temas -->
+                <div class="topic-content-container">
+                    <div class="content-detail" id="tema1-1">
+                        <h3>📌 Introducción a PostgreSQL</h3>
+                        <div class="content-body">
+                            <p><strong>PostgreSQL</strong> es un sistema de gestión de bases de datos relacional y de objetos, conocido por su estabilidad, robustez y características avanzadas.</p>
+                            <h4>Historia:</h4>
+                            <p>PostgreSQL se originó en el proyecto POSTGRES en la Universidad de California, Berkeley en 1986. Fue creado por Michael Stonebraker como sucesor de Ingres.</p>
+                            <h4>Características principales:</h4>
+                            <ul>
+                                <li>✅ Cumplimiento ACID completo</li>
+                                <li>✅ Transacciones y savepoints</li>
+                                <li>✅ Triggers y stored procedures</li>
+                                <li>✅ Vistas y vistas materializadas</li>
+                                <li>✅ Soporte para JSON y JSONB</li>
+                                <li>✅ Full-text search</li>
+                                <li>✅ Replicación y clustering</li>
+                            </ul>
+                            <div class="info-box">
+                                <strong>💡 ¿Sabías qué?</strong>
+                                <p>PostgreSQL es utilizado por grandes empresas como Apple, Instagram, Spotify y Reddit para manejar millones de transacciones diarias.</p>
+                            </div>
                         </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
                     </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
-
-                <div class="content-detail" id="tema1-2">
-                    <h3>🔧 Instalación de PostgreSQL</h3>
-                    <div class="content-body">
-                        <h4>En Windows:</h4>
-                        <ol>
-                            <li>Descarga desde postgresql.org</li>
-                            <li>Ejecuta el instalador</li>
-                            <li>Configura la contraseña de postgres</li>
-                            <li>Instala pgAdmin (GUI)</li>
-                        </ol>
-                        <h4>En Linux (Ubuntu):</h4>
-                        <pre><code>sudo apt update
-sudo apt install postgresql postgresql-contrib
-sudo systemctl start postgresql</code></pre>
-                        <h4>En macOS:</h4>
-                        <pre><code>brew install postgresql
+                    
+                    <div class="content-detail" id="tema1-2">
+                        <h3>⚙️ Instalación de PostgreSQL</h3>
+                        <div class="content-body">
+                            <h4>En Windows:</h4>
+                            <ol>
+                                <li>Descarga PostgreSQL desde postgresql.org</li>
+                                <li>Ejecuta el instalador</li>
+                                <li>Selecciona componentes (Server, pgAdmin, Command Line Tools)</li>
+                                <li>Configura la contraseña del usuario postgres</li>
+                                <li>Selecciona el puerto (default: 5432)</li>
+                                <li>Finaliza la instalación</li>
+                            </ol>
+                            <h4>En Linux (Ubuntu/Debian):</h4>
+                            <pre><code>sudo apt-get update
+sudo apt-get install postgresql postgresql-contrib
+sudo systemctl status postgresql</code></pre>
+                            <h4>En macOS:</h4>
+                            <pre><code>brew install postgresql
 brew services start postgresql</code></pre>
+                            <h4>Verificar instalación:</h4>
+                            <pre><code>psql --version
+sudo -u postgres psql</code></pre>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
                     </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
-
-                <div class="content-detail" id="tema1-3">
-                    <h3>📦 Conceptos Básicos</h3>
-                    <div class="content-body">
-                        <h4>Crear Base de Datos:</h4>
-                        <pre><code>CREATE DATABASE mi_base_datos;
-\c mi_base_datos;</code></pre>
-                        <h4>Crear Tabla:</h4>
-                        <pre><code>CREATE TABLE usuarios (
+                    
+                    <div class="content-detail" id="tema1-3">
+                        <h3>📦 Conceptos Básicos</h3>
+                        <div class="content-body">
+                            <h4>Crear Base de Datos:</h4>
+                            <pre><code>CREATE DATABASE mi_base;
+\c mi_base</code></pre>
+                            <h4>Crear Tablas:</h4>
+                            <pre><code>CREATE TABLE usuarios (
     id SERIAL PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    edad INTEGER CHECK (edad >= 18),
     fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );</code></pre>
-                        <h4>Tipos de Datos:</h4>
-                        <ul>
-                            <li><strong>SERIAL:</strong> Autoincremental</li>
-                            <li><strong>VARCHAR(n):</strong> Texto de longitud variable</li>
-                            <li><strong>TEXT:</strong> Texto ilimitado</li>
-                            <li><strong>TIMESTAMP:</strong> Fecha y hora</li>
-                        </ul>
+                            <h4>Tipos de Datos Comunes:</h4>
+                            <ul>
+                                <li>INTEGER, BIGINT, SMALLINT</li>
+                                <li>VARCHAR(n), TEXT</li>
+                                <li>BOOLEAN</li>
+                                <li>DATE, TIMESTAMP, INTERVAL</li>
+                                <li>NUMERIC, REAL, DOUBLE PRECISION</li>
+                                <li>JSON, JSONB</li>
+                                <li>UUID, ARRAY</li>
+                            </ul>
+                            <h4>Restricciones:</h4>
+                            <ul>
+                                <li>PRIMARY KEY - Clave primaria</li>
+                                <li>FOREIGN KEY - Clave foránea</li>
+                                <li>UNIQUE - Valores únicos</li>
+                                <li>NOT NULL - No nulo</li>
+                                <li>CHECK - Validación personalizada</li>
+                            </ul>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
                     </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
+                    
+                    <div class="content-detail" id="tema2-1">
+                        <h3>💻 Ejemplos Prácticos</h3>
+                        <div class="content-body">
+                            <h4>Consultas SELECT:</h4>
+                            <pre><code>-- Seleccionar todos
+SELECT * FROM usuarios;
 
-                <div class="content-detail" id="tema2-1">
-                    <h3>💻 Consultas SQL</h3>
-                    <div class="content-body">
-                        <h4>SELECT Básico:</h4>
-                        <pre><code>SELECT * FROM usuarios;
-SELECT nombre, email FROM usuarios WHERE id = 1;
-SELECT COUNT(*) FROM usuarios;</code></pre>
-                        <h4>JOINs:</h4>
-                        <pre><code>-- INNER JOIN
+-- Seleccionar columnas específicas
+SELECT nombre, email FROM usuarios;
+
+-- Con WHERE
+SELECT * FROM usuarios WHERE edad > 25;
+
+-- Con ORDER BY
+SELECT * FROM usuarios ORDER BY nombre ASC;</code></pre>
+                            <h4>JOINs:</h4>
+                            <pre><code>-- INNER JOIN
 SELECT u.nombre, p.titulo
 FROM usuarios u
 INNER JOIN posts p ON u.id = p.usuario_id;
@@ -267,153 +225,187 @@ INNER JOIN posts p ON u.id = p.usuario_id;
 SELECT u.nombre, p.titulo
 FROM usuarios u
 LEFT JOIN posts p ON u.id = p.usuario_id;</code></pre>
-                        <h4>Funciones de Agregación:</h4>
-                        <pre><code>SELECT AVG(precio), MAX(precio), MIN(precio)
-FROM productos;</code></pre>
-                    </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
+                            <h4>Funciones de Agregación:</h4>
+                            <pre><code>-- COUNT
+SELECT COUNT(*) FROM usuarios;
 
-                <div class="content-detail" id="tema2-2">
-                    <h3>✅ Buenas Prácticas</h3>
-                    <div class="content-body">
-                        <h4>Índices:</h4>
-                        <pre><code>-- Crear índice
+-- AVG
+SELECT AVG(edad) FROM usuarios;
+
+-- SUM, MAX, MIN
+SELECT SUM(ventas), MAX(ventas), MIN(ventas) FROM ventas;</code></pre>
+                            <h4>Subconsultas:</h4>
+                            <pre><code>SELECT nombre FROM usuarios
+WHERE id IN (SELECT usuario_id FROM posts WHERE fecha > '2024-01-01');</code></pre>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema2-2">
+                        <h3>✅ Buenas Prácticas</h3>
+                        <div class="content-body">
+                            <h4>Indexación:</h4>
+                            <pre><code>-- Crear índice
 CREATE INDEX idx_email ON usuarios(email);
 
+-- Índice compuesto
+CREATE INDEX idx_nombre_apellido ON usuarios(nombre, apellido);
+
 -- Índice único
-CREATE UNIQUE INDEX idx_usuario_email ON usuarios(email);</code></pre>
-                        <h4>Vistas Materializadas:</h4>
-                        <pre><code>CREATE VIEW vista_usuarios AS
-SELECT u.nombre, COUNT(p.id) as posts
+CREATE UNIQUE INDEX idx_email_unique ON usuarios(email);</code></pre>
+                            <h4>Optimización de Consultas:</h4>
+                            <ul>
+                                <li>✅ Usa EXPLAIN ANALYZE para ver el plan de ejecución</li>
+                                <li>✅ Indexa columnas usadas en WHERE y JOIN</li>
+                                <li>✅ Evita SELECT * - selecciona solo columnas necesarias</li>
+                                <li>✅ Usa LIMIT para paginar resultados grandes</li>
+                                <li>✅ Evita funciones en columnas indexadas en WHERE</li>
+                            </ul>
+                            <h4>Diseño de Esquemas:</h4>
+                            <ul>
+                                <li>✅ Normaliza hasta 3FN o BCNF</li>
+                                <li>✅ Usa claves foráneas para integridad referencial</li>
+                                <li>✅ Documenta tu esquema con comentarios</li>
+                                <li>✅ Usa nombres descriptivos para tablas y columnas</li>
+                            </ul>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema3-1">
+                        <h3>🚀 Casos Reales</h3>
+                        <div class="content-body">
+                            <h4>Patrón 1: E-commerce</h4>
+                            <pre><code>-- Tablas relacionadas
+CREATE TABLE productos (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(200),
+    precio DECIMAL(10,2),
+    stock INTEGER
+);
+
+CREATE TABLE ordenes (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER REFERENCES usuarios(id),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    total DECIMAL(10,2)
+);
+
+CREATE TABLE ordenes_detalle (
+    orden_id INTEGER REFERENCES ordenes(id),
+    producto_id INTEGER REFERENCES productos(id),
+    cantidad INTEGER,
+    precio_unitario DECIMAL(10,2),
+    PRIMARY KEY (orden_id, producto_id)
+);</code></pre>
+                            <h4>Patrón 2: Blog con Tags</h4>
+                            <pre><code>-- Relación muchos a muchos
+CREATE TABLE posts (
+    id SERIAL PRIMARY KEY,
+    titulo VARCHAR(200),
+    contenido TEXT,
+    usuario_id INTEGER REFERENCES usuarios(id)
+);
+
+CREATE TABLE tags (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(50) UNIQUE
+);
+
+CREATE TABLE post_tags (
+    post_id INTEGER REFERENCES posts(id),
+    tag_id INTEGER REFERENCES tags(id),
+    PRIMARY KEY (post_id, tag_id)
+);</code></pre>
+                            <h4>Empresas que usan PostgreSQL:</h4>
+                            <ul>
+                                <li>🏢 Instagram - Maneja billones de consultas diarias</li>
+                                <li>🎵 Spotify - Almacenamiento de metadatos de música</li>
+                                <li>🍎 Apple - Servicios de iCloud</li>
+                                <li>💼 Reddit - Sistema de votación y comentarios</li>
+                            </ul>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema3-2">
+                        <h3>📋 Proyecto Final</h3>
+                        <div class="content-body">
+                            <p>Desarrolla una base de datos completa para un sistema de gestión de biblioteca:</p>
+                            <h4>Requisitos:</h4>
+                            <ol>
+                                <li>📚 Tabla de libros (isbn, titulo, autor, editorial, año)</li>
+                                <li>👥 Tabla de usuarios (id, nombre, email, telefono)</li>
+                                <li>📋 Tabla de préstamos (id, libro_id, usuario_id, fecha_prestamo, fecha_devolucion)</li>
+                                <li>🏷️ Tabla de categorías (id, nombre, descripcion)</li>
+                                <li>📝 Tabla de reservas (id, libro_id, usuario_id, fecha_reserva, estado)</li>
+                            </ol>
+                            <h4>Consultas a implementar:</h4>
+                            <ul>
+                                <li>✅ Libros prestados actualmente</li>
+                                <li>✅ Usuarios con préstamos vencidos</li>
+                                <li>✅ Libros más prestados</li>
+                                <li>✅ Historial de préstamos por usuario</li>
+                                <li>✅ Disponibilidad de libros</li>
+                            </ul>
+                            <div class="info-box">
+                                <strong>💡 Entrega sugerida:</strong>
+                                <p>Crea un script SQL con todo el esquema, datos de prueba y las consultas requeridas. Documenta cada tabla y consulta con comentarios.</p>
+                            </div>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ejemplos" class="section section-alt">
+            <div class="container">
+                <h2>💻 Ejemplos de Código</h2>
+                <div class="examples-grid">
+                    <div class="example-card">
+                        <h4>📊 Consulta Básica</h4>
+                        <pre><code>SELECT nombre, email 
+FROM usuarios 
+WHERE edad >= 18
+ORDER BY nombre;</code></pre>
+                    </div>
+                    <div class="example-card">
+                        <h4>🔗 JOIN</h4>
+                        <pre><code>SELECT u.nombre, p.titulo
+FROM usuarios u
+JOIN posts p ON u.id = p.usuario_id
+WHERE p.fecha > '2024-01-01';</code></pre>
+                    </div>
+                    <div class="example-card">
+                        <h4>📈 Agregación</h4>
+                        <pre><code>SELECT u.nombre, COUNT(p.id) as posts
 FROM usuarios u
 LEFT JOIN posts p ON u.id = p.usuario_id
-GROUP BY u.id;</code></pre>
-                        <h4>EXPLAIN:</h4>
-                        <pre><code>EXPLAIN ANALYZE SELECT * FROM usuarios WHERE email = 'test@email.com';</code></pre>
+GROUP BY u.id
+HAVING COUNT(p.id) > 5;</code></pre>
                     </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
-
-                <div class="content-detail" id="tema3-1">
-                    <h3>🚀 Casos Reales</h3>
-                    <div class="content-body">
-                        <h4>Full-Text Search:</h4>
-                        <pre><code>SELECT * FROM posts
-WHERE to_tsvector('spanish', contenido) @@ to_tsquery('palabra');</code></pre>
-                        <h4>JSONB:</h4>
-                        <pre><code>CREATE TABLE productos (
-    id SERIAL PRIMARY KEY,
-    atributos JSONB
-);</code></pre>
-                        <h4>Backup:</h4>
-                        <pre><code>pg_dump -U postgres mi_base > backup.sql
-psql -U postgres -d mi_base < backup.sql</code></pre>
-                    </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
-                </div>
-
-                <div class="content-detail" id="tema3-2">
-                    <h3>📋 Proyecto Final</h3>
-                    <div class="content-body">
-                        <p>Desarrolla una base de datos completa:</p>
-                        <ol>
-                            <li>Diseñar modelo entidad-relación</li>
-                            <li>Crear tablas con restricciones</li>
-                            <li>Implementar triggers y funciones</li>
-                            <li>Configurar índices estratégicos</li>
-                            <li>Crear vistas para reportes</li>
-                            <li>Implementar backup automático</li>
-                        </ol>
-                        <div class="info-box">
-                            <strong>💡 Proyecto sugerido:</strong>
-                            <p>Crea una base de datos para red social con usuarios, posts, comentarios y likes.</p>
-                        </div>
-                    </div>
-                    <a href="#temas" class="btn btn-back">← Volver a temas</a>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Ejemplos -->
-    <section id="ejemplos" class="section section-alt">
-        <div class="container">
-            <h2>Ejemplos de Código</h2>
-            <div class="examples-container">
-                <div class="example-card">
-                    <h4>Crear Base de Datos</h4>
-                    <pre><code class="language-sql">CREATE DATABASE mi_base_datos;
-
-\c mi_base_datos;</code></pre>
-                </div>
-                <div class="example-card">
-                    <h4>Crear Tabla</h4>
-                    <pre><code class="language-sql">CREATE TABLE usuarios (
-    id SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    email VARCHAR(255) UNIQUE NOT NULL,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    activo BOOLEAN DEFAULT true
-);</code></pre>
-                </div>
-                <div class="example-card">
-                    <h4>Consulta con JOIN</h4>
-                    <pre><code class="language-sql">SELECT u.nombre, p.titulo
-FROM usuarios u
-INNER JOIN publicaciones p ON u.id = p.usuario_id
-WHERE u.activo = true
-ORDER BY p.fecha DESC;</code></pre>
-                </div>
-                <div class="example-card">
-                    <h4>Función JSON</h4>
-                    <pre><code class="language-sql">SELECT 
-    nombre,
-    datos->>'telefono' AS telefono
-FROM usuarios
-WHERE datos ? 'telefono';</code></pre>
+        <section id="contacto" class="contact">
+            <div class="container">
+                <h2>👨‍💻 Desarrollado por Isaac Esteban Haro Torres</h2>
+                <p class="contact-title">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
+                <div class="contact-info">
+                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
+                    <p>📱 WhatsApp: 098805517</p>
+                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
+                    <p>🌐 Portafolio: <a href="https://ieharo1.github.io/portafolio-isaac.haro/" target="_blank">ieharo1.github.io/portafolio-isaac.haro/</a></p>
                 </div>
             </div>
-            <div class="text-center">
-                <a href="#" class="btn btn-primary">Ver más ejemplos</a>
-            </div>
-        </div>
-    </section>
+        </section>
+    </main>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>PostgreSQL desde Cero</h4>
-                    <p>Guía educativa completa para aprender PostgreSQL desde los fundamentos hasta conceptos avanzados.</p>
-                </div>
-                <div class="footer-section">
-                    <h4>Enlaces Rápidos</h4>
-                    <ul>
-                        <li><a href="#inicio">Inicio</a></li>
-                        <li><a href="#que-es">¿Qué es?</a></li>
-                        <li><a href="#temas">Temas</a></li>
-                        <li><a href="#ejemplos">Ejemplos</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h4>Recursos</h4>
-                    <ul>
-                        <li><a href="https://www.postgresql.org/docs/" target="_blank">Docs Oficiales</a></li>
-                        <li><a href="https://www.postgresql.org/" target="_blank">Sitio Oficial</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>👨‍💻 Desarrollado por <strong>Isaac Esteban Haro Torres</strong></p>
-                <p class="developer-info">Ingeniero en Sistemas · Full Stack · Automatización · Data</p>
-                <div class="developer-contact">
-                    <p>📧 Email: <a href="mailto:zackharo1@gmail.com">zackharo1@gmail.com</a></p>
-                    <p>💻 GitHub: <a href="https://github.com/ieharo1" target="_blank">github.com/ieharo1</a></p>
-                </div>
-                <p class="copyright">© 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
-            </div>
+            <p>&copy; 2026 Isaac Esteban Haro Torres - Todos los derechos reservados.</p>
         </div>
     </footer>
 

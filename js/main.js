@@ -1,64 +1,34 @@
-/* ============================================
-   JavaScript Principal - PostgreSQL Desde Cero
-   ============================================ */
+/* Main JavaScript - PostgreSQL Desde Cero */
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log('🐘 PostgreSQL Desde Cero - Sitio cargado correctamente');
-
-    // Toggle del menú móvil
-    const navToggle = document.getElementById('navToggle');
-    const navMenu = document.getElementById('navMenu');
-
-    if (navToggle && navMenu) {
-        navToggle.addEventListener('click', function() {
-            navMenu.classList.toggle('active');
-        });
-    }
 
     // Smooth scroll para enlaces internos
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const targetId = this.getAttribute('href');
-
-            // Si es un enlace a un tema, mostrar el contenido
+            
             if (targetId.startsWith('#tema')) {
                 showTopicContent(targetId);
                 return;
             }
-
+            
             const target = document.querySelector(targetId);
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+            if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         });
     });
 
-    // Función para mostrar contenido de tema
     function showTopicContent(topicId) {
         const content = document.getElementById(topicId);
         if (content) {
-            // Ocultar todos los contenidos
-            document.querySelectorAll('.content-detail').forEach(el => {
-                el.style.display = 'none';
-            });
-
-            // Mostrar el contenido seleccionado
+            document.querySelectorAll('.content-detail').forEach(el => el.style.display = 'none');
             content.style.display = 'block';
-
-            // Scroll suave al contenido
-            setTimeout(() => {
-                content.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }, 100);
+            setTimeout(() => content.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
         }
     }
 
-    // Ocultar todos los content-detail al cargar
-    document.querySelectorAll('.content-detail').forEach(el => {
-        el.style.display = 'none';
-    });
+    document.querySelectorAll('.content-detail').forEach(el => el.style.display = 'none');
 
-    // Mensaje de bienvenida
     console.log('%c🐘 ¡Bienvenido a PostgreSQL Desde Cero!', 'font-size: 20px; color: #336791; font-weight: bold;');
-    console.log('%cEl RDBMS open source más avanzado del mundo', 'font-size: 14px; color: #264f78;');
 });
