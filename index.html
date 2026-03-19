@@ -57,63 +57,57 @@
             </div>
         </section>
 
-        <section id="temas" class="section">
+        <section id="temas" class="topics">
             <div class="container">
-                <h2>📚 Contenido del Curso</h2>
+                <h2>📖 Temas del Curso</h2>
+                <p class="topics-intro">Haz clic en cualquier tema para ver el contenido detallado</p>
+                
                 <div class="topics-grid">
                     <div class="topic-card">
-                        <div class="topic-number">01</div>
-                        <div class="topic-icon">📌</div>
-                        <h3>Introducción</h3>
-                        <p>Conceptos básicos de PostgreSQL, instalación y configuración inicial del entorno.</p>
-                        <a href="#tema1-1" class="topic-link">Ver tema →</a>
+                        <div class="topic-header">
+                            <span class="topic-icon">🐘</span>
+                            <h3>Módulo 1: Fundamentos</h3>
+                        </div>
+                        <ul class="topic-list">
+                            <li><a href="#tema1-1">Introducción a PostgreSQL</a></li>
+                            <li><a href="#tema1-2">Instalación</a></li>
+                            <li><a href="#tema1-3">Conceptos básicos</a></li>
+                            <li><a href="#tema1-4">Bases de Datos y Tablas</a></li>
+                        </ul>
+                        <a href="#tema1-1" class="btn-topic">Ver tema →</a>
                     </div>
+
                     <div class="topic-card">
-                        <div class="topic-number">02</div>
-                        <div class="topic-icon">⚙️</div>
-                        <h3>Instalación</h3>
-                        <p>Guía paso a paso para instalar PostgreSQL en Windows, Linux y macOS.</p>
-                        <a href="#tema1-2" class="topic-link">Ver tema →</a>
+                        <div class="topic-header">
+                            <span class="topic-icon">⚙️</span>
+                            <h3>Módulo 2: Intermedio</h3>
+                        </div>
+                        <ul class="topic-list">
+                            <li><a href="#tema2-1">Ejemplos prácticos</a></li>
+                            <li><a href="#tema2-2">Buenas prácticas</a></li>
+                            <li><a href="#tema2-3">Consultas Avanzadas</a></li>
+                            <li><a href="#tema2-4">Vistas y Funciones</a></li>
+                        </ul>
+                        <a href="#tema2-1" class="btn-topic">Ver tema →</a>
                     </div>
+
                     <div class="topic-card">
-                        <div class="topic-number">03</div>
-                        <div class="topic-icon">📦</div>
-                        <h3>Conceptos básicos</h3>
-                        <p>Creación de bases de datos, tablas, tipos de datos y restricciones.</p>
-                        <a href="#tema1-3" class="topic-link">Ver tema →</a>
-                    </div>
-                    <div class="topic-card">
-                        <div class="topic-number">04</div>
-                        <div class="topic-icon">💻</div>
-                        <h3>Ejemplos prácticos</h3>
-                        <p>Consultas SELECT, JOINs, subconsultas y funciones de agregación.</p>
-                        <a href="#tema2-1" class="topic-link">Ver tema →</a>
-                    </div>
-                    <div class="topic-card">
-                        <div class="topic-number">05</div>
-                        <div class="topic-icon">✅</div>
-                        <h3>Buenas prácticas</h3>
-                        <p>Indexación, optimización de consultas y diseño de esquemas eficientes.</p>
-                        <a href="#tema2-2" class="topic-link">Ver tema →</a>
-                    </div>
-                    <div class="topic-card">
-                        <div class="topic-number">06</div>
-                        <div class="topic-icon">🚀</div>
-                        <h3>Casos reales</h3>
-                        <p>Ejemplos de implementación en producción y patrones de diseño comunes.</p>
-                        <a href="#tema3-1" class="topic-link">Ver tema →</a>
-                    </div>
-                    <div class="topic-card">
-                        <div class="topic-number">07</div>
-                        <div class="topic-icon">📋</div>
-                        <h3>Proyecto final</h3>
-                        <p>Desarrollo de una base de datos completa para una aplicación real.</p>
-                        <a href="#tema3-2" class="topic-link">Ver tema →</a>
+                        <div class="topic-header">
+                            <span class="topic-icon">🚀</span>
+                            <h3>Módulo 3: Avanzado</h3>
+                        </div>
+                        <ul class="topic-list">
+                            <li><a href="#tema3-1">Casos reales</a></li>
+                            <li><a href="#tema3-2">Proyecto final</a></li>
+                            <li><a href="#tema3-3">Optimización y Tuning</a></li>
+                            <li><a href="#tema3-4">Administración Avanzada</a></li>
+                        </ul>
+                        <a href="#tema3-1" class="btn-topic">Ver tema →</a>
                     </div>
                 </div>
-                
+
                 <!-- Contenido Detallado de Temas -->
-                <div class="topic-content-container">
+                <div class="topic-content">
                     <div class="content-detail" id="tema1-1">
                         <h3>📌 Introducción a PostgreSQL</h3>
                         <div class="content-body">
@@ -352,6 +346,194 @@ CREATE TABLE post_tags (
                                 <strong>💡 Entrega sugerida:</strong>
                                 <p>Crea un script SQL con todo el esquema, datos de prueba y las consultas requeridas. Documenta cada tabla y consulta con comentarios.</p>
                             </div>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    <div class="content-detail" id="tema1-4">
+                        <h3>💾 Backup, Restore y pgAdmin</h3>
+                        <div class="content-body">
+                            <h4>pg_dump:</h4>
+                            <pre><code>pg_dump -U postgres -d mi_base -F c -f backup.dump
+
+# Restaurar
+pg_restore -U postgres -d mi_base backup.dump
+
+# Backup en texto plano
+pg_dump -U postgres -d mi_base > backup.sql</code></pre>
+                            <h4>pgAdmin 4:</h4>
+                            <ul>
+                                <li>Herramienta gráfica oficial para PostgreSQL</li>
+                                <li>Diseño de bases de datos visual</li>
+                                <li>Ejecución de queries</li>
+                                <li>Gestión de backups</li>
+                                <li>Monitoreo de rendimiento</li>
+                            </ul>
+                            <h4>Herramientas Adicionales:</h4>
+                            <pre><code>psql -U postgres -d mi_base -c "\dt"    # Listar tablas
+psql -U postgres -d mi_base -c "\d tabla"  # Estructura
+psql -U postgres -d mi_base < backup.sql    # Restaurar</code></pre>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema2-3">
+                        <h3>🔐 Transacciones y Control de Concurrencia</h3>
+                        <div class="content-body">
+                            <h4>Transacciones:</h4>
+                            <pre><code>BEGIN;
+
+UPDATE cuentas SET saldo = saldo - 500 WHERE id = 1;
+UPDATE cuentas SET saldo = saldo + 500 WHERE id = 2;
+
+-- Verificar
+SELECT * FROM cuentas WHERE id IN (1, 2);
+
+-- Confirmar o revertir
+COMMIT;
+-- o ROLLBACK;</code></pre>
+                            <h4>Niveles de Aislamiento:</h4>
+                            <pre><code>-- Ver nivel actual
+SHOW transaction_isolation;
+
+-- Establecer nivel
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+
+-- En una transacción
+BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;</code></pre>
+                            <h4>SAVEPOINT:</h4>
+                            <pre><code>BEGIN;
+INSERT INTO log VALUES ('evento1');
+SAVEPOINT sp1;
+INSERT INTO log VALUES ('evento2');
+ROLLBACK TO SAVEPOINT sp1;
+COMMIT;</code></pre>
+                            <h4>Control de Concurrencia (MVCC):</h4>
+                            <p>PostgreSQL usa MVCC que permite lecturas concurrentes sin bloqueos.</p>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema2-4">
+                        <h3>📊 Subconsultas y UNION</h3>
+                        <div class="content-body">
+                            <h4>Subconsultas:</h4>
+                            <pre><code>-- Escalar
+SELECT nombre, salario, 
+    (SELECT AVG(salario) FROM empleados) AS promedio
+FROM empleados;
+
+-- Tabla
+SELECT dept, promedio FROM (
+    SELECT departamento_id AS dept, AVG(salario) AS promedio
+    FROM empleados GROUP BY departamento_id
+) AS stats WHERE promedio > 50000;</code></pre>
+                            <h4>CTE (Common Table Expression):</h4>
+                            <pre><code>WITH stats AS (
+    SELECT departamento_id, AVG(salario) AS promedio
+    FROM empleados GROUP BY departamento_id
+)
+SELECT e.nombre, e.salario, s.promedio
+FROM empleados e
+JOIN stats s ON e.departamento_id = s.departamento_id
+WHERE e.salario > s.promedio;</code></pre>
+                            <h4>UNION, INTERSECT, EXCEPT:</h4>
+                            <pre><code>-- UNION (sin duplicados)
+SELECT nombre FROM empleados_2023
+UNION
+SELECT nombre FROM empleados_2024;
+
+-- UNION ALL (con duplicados)
+SELECT nombre FROM empleados_2023
+UNION ALL
+SELECT nombre FROM empleados_2024;
+
+-- INTERSECT (comunes)
+SELECT email FROM clientes
+INTERSECT
+SELECT email FROM Newsletter;</code></pre>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema3-3">
+                        <h3>🧩 Procedimientos, Funciones y Triggers</h3>
+                        <div class="content-body">
+                            <h4>Procedimientos (PL/pgSQL):</h4>
+                            <pre><code>CREATE OR REPLACE PROCEDURE transferencia(
+    origen INT, destino INT, monto DECIMAL(10,2)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE cuentas SET saldo = saldo - monto WHERE id = origen;
+    UPDATE cuentas SET saldo = saldo + monto WHERE id = destino;
+    COMMIT;
+EXCEPTION
+    WHEN OTHERS THEN
+        ROLLBACK;
+        RAISE;
+END $$;
+
+CALL transferencia(1, 2, 100);</code></pre>
+                            <h4>Funciones:</h4>
+                            <pre><code>CREATE OR REPLACE FUNCTION calcular_iva(precio DECIMAL)
+RETURNS DECIMAL AS $$
+BEGIN
+    RETURN precio * 0.16;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT nombre, precio, calcular_iva(precio) AS iva FROM productos;</code></pre>
+                            <h4>Triggers:</h4>
+                            <pre><code>CREATE OR REPLACE FUNCTION audit_trigger()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO audit_log (tabla, accion, usuario, fecha)
+    VALUES (TG_TABLE_NAME, TG_OP, current_user, now());
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER tr_empleados_audit
+AFTER UPDATE ON empleados
+FOR EACH ROW EXECUTE FUNCTION audit_trigger();</code></pre>
+                        </div>
+                        <a href="#temas" class="btn btn-back">← Volver a temas</a>
+                    </div>
+                    
+                    <div class="content-detail" id="tema3-4">
+                        <h3>🚀 Replicación y Alta Disponibilidad</h3>
+                        <div class="content-body">
+                            <h4>Replicación Física:</h4>
+                            <pre><code>-- En postgresql.conf (maestro)
+wal_level = replica
+max_wal_senders = 3
+wal_keep_size = 1GB
+
+-- pg_hba.conf
+host replication all 192.168.1.0/24 md5
+
+-- En esclavo
+pg_basebackup -h master_ip -D /var/lib/postgresql/data -U replication -P</code></pre>
+                            <h4>Logical Replication:</h4>
+                            <pre><code>-- Crear publicación
+CREATE PUBLICATION mi_pub FOR TABLE productos;
+
+-- Crear suscripción
+CREATE SUBSCRIPTION mi_sub
+CONNECTION 'host=master port=5432 dbname=mi_db'
+PUBLICATION mi_pub;</code></pre>
+                            <h4>Patronización:</h4>
+                            <pre><code>-- pgpool-II o PgBouncer para pooling
+-- Patroni para alta disponibilidad
+-- Amazon RDS / Aurora para cloud</code></pre>
+                            <h4>Partitioning:</h4>
+                            <pre><code>CREATE TABLE ventas (
+    id SERIAL, fecha DATE, monto DECIMAL
+) PARTITION BY RANGE (fecha);
+
+CREATE TABLE ventas_2024 PARTITION OF ventas
+    FOR VALUES FROM ('2024-01-01') TO ('2025-01-01');</code></pre>
                         </div>
                         <a href="#temas" class="btn btn-back">← Volver a temas</a>
                     </div>
